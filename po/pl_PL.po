@@ -1,0 +1,434 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: opencpn\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-31 18:12+0000\n"
+"PO-Revision-Date: 2018-02-08 09:11-0500\n"
+"Last-Translator: nohal <pavel@kalian.cz>\n"
+"Language-Team: Polish\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: opencpn\n"
+"X-Crowdin-Language: pl\n"
+"X-Crowdin-File: /plugins/otcurrent_pi/po/otcurrent_pi.pot\n"
+#
+msgid "      < 0.5 knots"
+msgstr "      < 0,5 węzłów"
+#
+#, c-format
+msgid "%.1f"
+msgstr ""
+#
+msgid "&About"
+msgstr ""
+#
+msgid "&Guide"
+msgstr ""
+#
+msgid ">= 0.5 and < 1.5"
+msgstr ">= 0.5 and < 1.5"
+#
+msgid ">= 1.5 and < 2.5"
+msgstr "> = 1.5 i < 2.5"
+#
+msgid ">= 2.5 and < 3.5"
+msgstr "> = 2.5 i < 3.5"
+#
+msgid ">= 3.5 knots    "
+msgstr "> = 3,5 węzłów    "
+#
+msgid "About Author"
+msgstr ""
+#
+msgid "About Weather Routing"
+msgstr ""
+#
+msgid "Bearing"
+msgstr ""
+#
+msgid "CTS"
+msgstr ""
+#
+msgid "Chart Route"
+msgstr ""
+#
+msgid "Close"
+msgstr ""
+#
+msgid "Course to steer"
+msgstr ""
+#
+msgid "DR"
+msgstr ""
+#
+msgid "DR Route has been calculated!"
+msgstr ""
+#
+msgid "DR Route has been charted!"
+msgstr ""
+#
+msgid "Daytime"
+msgstr ""
+#
+msgid "Delete"
+msgstr ""
+#
+msgid "Delete All Routes"
+msgstr ""
+#
+msgid "Delete all routes?\n"
+msgstr ""
+#
+msgid "Depart From"
+msgstr ""
+#
+#, fuzzy
+msgid "Departure Time"
+msgstr "Data i godzina"
+#
+msgid "Departure Time (Y/m/d h:m)"
+msgstr ""
+#
+msgid "Destination"
+msgstr ""
+#
+msgid "Display tidal direction"
+msgstr "Wyświetl kierunek pływów"
+#
+msgid "Display tidal rates (knots)"
+msgstr "Wyświetlanie wielkość pływów (węzłów)"
+#
+msgid "Distance"
+msgstr ""
+#
+msgid "Duration"
+msgstr ""
+#
+msgid "ETA"
+msgstr ""
+#
+msgid "ETA Route has been charted!"
+msgstr ""
+#
+msgid "ETA Routes have been calculated!"
+msgstr ""
+#
+msgid "End"
+msgstr ""
+#
+msgid "End Time"
+msgstr ""
+#
+msgid "EndTime"
+msgstr ""
+#
+msgid "Error in calculation. Please check input!"
+msgstr ""
+#
+msgid "EvTwilight"
+msgstr ""
+#
+msgid "Export DR Positions in GPX file as"
+msgstr ""
+#
+msgid "Export ETA Positions in GPX file as"
+msgstr ""
+#
+msgid "Failed to load file."
+msgstr ""
+#
+msgid "Failed to load file: "
+msgstr ""
+#
+msgid "Failed to save xml file: "
+msgstr ""
+#
+msgid "File contains duplicate position name, discarding\n"
+msgstr ""
+#
+msgid "Fill Colour"
+msgstr "Kolor wypełnienia"
+#
+msgid "From"
+msgstr ""
+#
+msgid "Grib plugin version not supported."
+msgstr ""
+#
+msgid "Import GPX Route file"
+msgstr ""
+#
+msgid "Invalid xml file"
+msgstr ""
+#
+msgid "LMT @ Location"
+msgstr ""
+#
+msgid "Latitude"
+msgstr ""
+#
+msgid "Leg"
+msgstr ""
+#
+msgid "Load"
+msgstr ""
+#
+msgid "Loading"
+msgstr ""
+#
+msgid "Local @ PC"
+msgstr ""
+#
+msgid "Longitude"
+msgstr ""
+#
+msgid "MoTwilight"
+msgstr ""
+#
+msgid "Name"
+msgstr ""
+#
+msgid "Nighttime"
+msgstr ""
+#
+msgid "No routes found. Please make a route"
+msgstr ""
+#
+msgid "No routes have been calculated"
+msgstr ""
+#
+msgid "OK"
+msgstr ""
+#
+msgid "Open the GRIB plugin and select a time!"
+msgstr ""
+#
+msgid "Plan Speed"
+msgstr ""
+#
+msgid "Please enter a name for the route!"
+msgstr ""
+#
+msgid "Please select a route"
+msgstr ""
+#
+msgid "Please select or generate a route"
+msgstr ""
+#
+msgid "Preferences"
+msgstr "Ustawienia"
+#
+msgid "Properties"
+msgstr ""
+#
+msgid "Route"
+msgstr ""
+#
+msgid "Route Calculation Type:"
+msgstr ""
+#
+msgid "Route Properties"
+msgstr ""
+#
+msgid "Route Table"
+msgstr ""
+#
+msgid "Route name already exists, please edit the name"
+msgstr ""
+#
+msgid ""
+"Route start date is not compatible with this Grib \n"
+" Or Grib is not available for part of the route"
+msgstr ""
+#
+msgid "RouteCalculation Type:"
+msgstr ""
+#
+msgid "RouteName"
+msgstr ""
+#
+msgid "Routes"
+msgstr ""
+#
+msgid "Speed"
+msgstr ""
+#
+msgid "Start"
+msgstr ""
+#
+#, fuzzy
+msgid "Start Time"
+msgstr "Data i godzina"
+#
+#, fuzzy
+msgid "StartTime"
+msgstr "Data i godzina"
+#
+msgid "Sunrise"
+msgstr ""
+#
+msgid "Sunset"
+msgstr ""
+#
+msgid ""
+"The oTidalRoute plugin for opencpn is intended to calculate routes based on "
+"computerized tidal data.\n"
+"\n"
+"License: GPLv3+\n"
+"\n"
+"Source Code:\n"
+"https://github.com/rasbats/oTidalRoute_pi\n"
+"\n"
+"Author:\n"
+"Mike Rossiter\n"
+"\n"
+"Many thanks to all translators and testers."
+msgstr ""
+#
+msgid "Tidal Current Arrow Colour"
+msgstr "Kolor strzałki Prądu pływowego"
+#
+#, fuzzy
+msgid "Tidal Rate"
+msgstr "Folder danych pływów"
+#
+msgid "Tidal Routes"
+msgstr ""
+#
+msgid "Tidal Set"
+msgstr ""
+#
+msgid "TidalRoutingInformation.html"
+msgstr ""
+#
+#, fuzzy
+msgid "Time"
+msgstr "Data i godzina"
+#
+msgid "Time Enroute"
+msgstr ""
+#
+msgid "Times shown as"
+msgstr ""
+#
+msgid "To Waypoint"
+msgstr ""
+#
+msgid "Total Distance"
+msgstr ""
+#
+msgid "Towards"
+msgstr ""
+#
+msgid "Type"
+msgstr ""
+#
+msgid "UTC"
+msgstr ""
+#
+msgid ""
+"Unable to calculate ETA over two legs at this speed. \n"
+"\n"
+" Aborting"
+msgstr ""
+#
+msgid ""
+"Unable to compute speed over ground with this tide and boat speed, \n"
+"\n"
+" Aborting"
+msgstr ""
+#
+msgid "Unrecognized xml node"
+msgstr ""
+#
+#, c-format
+msgid "Use versions %d.%d to %d.%d"
+msgstr ""
+#
+msgid "Waypoint Properties"
+msgstr ""
+#
+msgid "Waypoints"
+msgstr ""
+#
+msgid "Weather Routing"
+msgstr ""
+#
+msgid "error in input range validation"
+msgstr ""
+#
+msgid "oTidalRoute"
+msgstr ""
+#
+msgid "oTidalRoute Plugin Version"
+msgstr ""
+#
+msgid "otidalroute"
+msgstr ""
+#
+#, fuzzy
+msgid "otidalroute PlugIn for OpenCPN"
+msgstr "otcurrent PlugIn dla OpenCPN"
+#
+msgid ""
+"otidalroute PlugIn for OpenCPN\n"
+"Calculates EP positions/Courses using Grib tidal current data.\n"
+"\n"
+"\t\t\t   "
+msgstr ""
+#
+msgid "rte Invalid xml file"
+msgstr ""
+#
+#
+#~ msgid "About Tidal Arrows"
+#~ msgstr "O strzałkach pływów"
+#
+#
+#~ msgid "Help"
+#~ msgstr "Pomoc"
+#
+#
+#~ msgid "Next"
+#~ msgstr "Następny"
+#
+#
+#~ msgid "Now"
+#~ msgstr "Teraz"
+#
+#
+#~ msgid "Previous"
+#~ msgstr "Poprzedni"
+#
+#
+#~ msgid "Select a folder"
+#~ msgstr "Wybierz folder"
+#
+#
+#~ msgid "Step (Minutes)"
+#~ msgstr "Krok (w minutach)"
+#
+#
+#~ msgid "Using Tide/Current data from:  "
+#~ msgstr "Użycie danych Pływ/Prąd z:  "
+#
+#
+#~ msgid "otcurrent"
+#~ msgstr "otcurrent"
+#
+#
+#~ msgid ""
+#~ "otcurrent PlugIn for OpenCPN\n"
+#~ "Provides an overlay of Tidal Current (Stream) Arrows.\n"
+#~ "\n"
+#~ "\t\t\t   "
+#~ msgstr ""
+#~ "otcurrent wtyczka do OpenCPN\n"
+#~ "Zapewnia nakładkę Prądów pływowych.\n"
+#~ "\n"
+#~ "\t\t\t   "
