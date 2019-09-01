@@ -721,13 +721,15 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 	{
 		if (dbg) cout << "DummyDR Calculation\n";
 		double speed = 0;
-		double maxDist;
+		double maxDist = 0;
 
 		wxString s_LegDist = m_cLegDist->GetStringSelection();
 		s_LegDist.ToDouble(&speed);
 
 		wxString s_MaxDist = m_cMaxDist->GetStringSelection();
-		s_MaxDist.ToDouble(&maxDist);
+		s_MaxDist.ToDouble(&maxDist);	
+
+		//wxMessageBox(wxString::Format("%.1f", maxDist));
 
 		double lati, loni;
 		double latN[200], lonN[200];
@@ -835,6 +837,7 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 		wxDateTime dtStart, dtEnd, interimDateTimeETA;
 		int tcRefNum, last_tcRefNum;
 		tcRefNum = 0;
+		last_tcRefNum = 0;
 
 		sdt = m_textCtrl1->GetValue(); // date/time route starts
 		dt.ParseDateTime(sdt);
@@ -863,11 +866,13 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 				destLoxodrome(latN[i], lonN[i], myBrng, myDist / 2, &latD, &lonD);
 				tcRefNum = FindTCurrentStation(latD, lonD, maxDist);
 
+				
+
 				if (tcRefNum == 0) {
 					tcRefNum = last_tcRefNum;
 
 				}
-				else {
+				else { 
 					last_tcRefNum = tcRefNum;
 				}
 
@@ -892,10 +897,11 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 
 				destLoxodrome(latN[i], lonN[i], myBrng, speed / 2, &latD, &lonD);
 				tcRefNum = FindTCurrentStation(latD, lonD, maxDist);
+
+				//wxMessageBox(wxString::Format("%i", tcRefNum));
 				
 				if (tcRefNum == 0) {
 					tcRefNum = last_tcRefNum;
-
 				}
 				else {
 					last_tcRefNum = tcRefNum;
@@ -924,15 +930,15 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 			/*
 			There are two things to record ... an OpenCPN route and a vector of positions for the tc.
 			*/
-
-			PlugIn_Waypoint*  newPoint = new PlugIn_Waypoint
-			(latN[i], lonN[i], wxT("Circle"), waypointName[i]);
-			newPoint->m_IconName = wxT("Circle");
-			newPoint->m_MarkDescription = wxString::Format("%i", tcRefNum);      //dt.Format(_T(" %a %d-%b-%Y  %H:%M"));
-			newPoint->m_GUID = wxString::Format(_T("%i"), (int)GetRandomNumber(1, 4000000));
-			newPoint->m_IsVisible = 1;
-			newRoute->pWaypointList->Append(newPoint);
-
+			if (tcRefNum != 0) {
+				PlugIn_Waypoint*  newPoint = new PlugIn_Waypoint
+				(latN[i], lonN[i], wxT("Circle"), waypointName[i]);
+				newPoint->m_IconName = wxT("Circle");
+				newPoint->m_MarkDescription = wxString::Format("%i", tcRefNum);      //dt.Format(_T(" %a %d-%b-%Y  %H:%M"));
+				newPoint->m_GUID = wxString::Format(_T("%i"), (int)GetRandomNumber(1, 4000000));
+				newPoint->m_IsVisible = 1;
+				newRoute->pWaypointList->Append(newPoint);
+			}
 
 			if (i == 0) {
 
@@ -1145,17 +1151,19 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 								last_tcRefNum = tcRefNum;
 							}
 
-							dummyTideArrow = FindDummyTCurrent(tcRefNum);
+							if (tcRefNum != 0) {
+								dummyTideArrow = FindDummyTCurrent(tcRefNum);
 
-							thisTC.tcLat = dummyTideArrow.lat;
-							thisTC.tcLon = dummyTideArrow.lon;
-							thisTC.lat = latD;
-							thisTC.lon = lonD;
-							thisTC.tcRef = tcRefNum;
-							thisTC.legNum = legNumber;
-							thisTC.routeName = thisRoute;
+								thisTC.tcLat = dummyTideArrow.lat;
+								thisTC.tcLon = dummyTideArrow.lon;
+								thisTC.lat = latD;
+								thisTC.lon = lonD;
+								thisTC.tcRef = tcRefNum;
+								thisTC.legNum = legNumber;
+								thisTC.routeName = thisRoute;
 
-							dummyTC.push_back(thisTC);
+								dummyTC.push_back(thisTC);
+							}
 
 						}
 						
@@ -1229,16 +1237,16 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 							 }
 						 }
 					 
-					 
-					epNumber++;
-					epName = wxString::Format(wxT("%i"), epNumber);
-					PlugIn_Waypoint*  epPoint = new PlugIn_Waypoint
-					(lati, loni, wxT("Symbol-Square-White"), (_T("DR") + epName));
-					epPoint->m_IconName = wxT("Symbol-Square-White");
-					epPoint->m_MarkDescription = wxString::Format(wxT("%i"), tcRefNum);                                  //dt.Format(_T("%a %d-%b-%Y  %H:%M"));
-					epPoint->m_GUID = wxString::Format(_T("%i"), (int)GetRandomNumber(1, 4000000));
-					newRoute->pWaypointList->Append(epPoint);		
-
+						 if (tcRefNum != 0) {
+							 epNumber++;
+							 epName = wxString::Format(wxT("%i"), epNumber);
+							 PlugIn_Waypoint*  epPoint = new PlugIn_Waypoint
+							 (lati, loni, wxT("Symbol-Square-White"), (_T("DR") + epName));
+							 epPoint->m_IconName = wxT("Symbol-Square-White");
+							 epPoint->m_MarkDescription = wxString::Format(wxT("%i"), tcRefNum);                                  //dt.Format(_T("%a %d-%b-%Y  %H:%M"));
+							 epPoint->m_GUID = wxString::Format(_T("%i"), (int)GetRandomNumber(1, 4000000));
+							 newRoute->pWaypointList->Append(epPoint);
+						 }
 					llat = lati;
 					llon = loni;
 
@@ -1262,15 +1270,18 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 		}
 		// End of new logic
 		//
-		PlugIn_Waypoint*  endPoint = new PlugIn_Waypoint
-		(latN[n], lonN[n], wxT("Circle"), "end");
+		if (tcRefNum != 0) {
+			PlugIn_Waypoint*  endPoint = new PlugIn_Waypoint
+			(latN[n], lonN[n], wxT("Circle"), "end");
 
-    	endPoint->m_IconName = wxT("Circle");
-		endPoint->m_MarkName = waypointName[n];
-		endPoint->m_MarkDescription = ddt;
-		endPoint->m_GUID = wxString::Format(_T("%i"), (int)GetRandomNumber(1, 4000000));
+			endPoint->m_IconName = wxT("Circle");
+			endPoint->m_MarkName = waypointName[n];
+			endPoint->m_MarkDescription = ddt;
+			endPoint->m_GUID = wxString::Format(_T("%i"), (int)GetRandomNumber(1, 4000000));
 
-		newRoute->pWaypointList->Append(endPoint);
+			newRoute->pWaypointList->Append(endPoint);
+
+		}
 
 		//AddPlugInRoute(newRoute); // add the route to OpenCPN routes and display the route on the chart			
 
@@ -2410,7 +2421,7 @@ void otidalplanUIDialog::CalcETA(wxCommandEvent& event, bool write_file, int Pat
 				lastVBG1 = VBG;
 				DistanceBearingMercator(latN[i + 1], lonN[i + 1], latN[i], lonN[i], &myDist, &myBrng);
 
-				cl = FindClosestDummyTCurrent(thisRoute, latN[i], lonN[i]); 
+				cl = FindClosestDummyTCurrent(thisRoute, latN[i], lonN[i], speed); 
 				if (cl == 9999) {
 					return;
 				}
@@ -2689,7 +2700,7 @@ void otidalplanUIDialog::CalcETA(wxCommandEvent& event, bool write_file, int Pat
 					total3MinuteSteps++;
 					dtCurrent.Add(threeMinuteSpan);
 
-					cl = FindClosestDummyTCurrent(thisRoute, lati, loni);
+					cl = FindClosestDummyTCurrent(thisRoute, lati, loni, speed);
 					if (cl == 9999) {
 						return;
 					}
@@ -3572,7 +3583,7 @@ int otidalplanUIDialog::FindTCurrentStation(double m_lat, double m_lon, double s
 	return m_tcNum;
 }
 
-int otidalplanUIDialog::FindClosestDummyTCurrent(wxString rteName, double m_lat, double m_lon) {
+int otidalplanUIDialog::FindClosestDummyTCurrent(wxString rteName, double m_lat, double m_lon, double maxDistance) {
 
 	double tcDistance = 1000;
 	double rLat, rLon;
@@ -3610,9 +3621,9 @@ int otidalplanUIDialog::FindClosestDummyTCurrent(wxString rteName, double m_lat,
 		}
 
 		compDistance = compDistance + 1;
-		if (compDistance > 100) {
+		if (compDistance > maxDistance) {
 			wxString notFound = _("No Tidal Current Station found within 100NM");
-			break;
+			return 0;
 		}
 
 	}

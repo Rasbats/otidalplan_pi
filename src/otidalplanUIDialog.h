@@ -278,7 +278,7 @@ public:
 	void OnContextMenu(double m_lat, double m_lon);
 	void LoadTCMFile();
 	TotalTideArrow FindDummyTCurrent(int refNum);
-	int FindClosestDummyTCurrent(wxString rteName, double m_lat, double m_lon);
+	int FindClosestDummyTCurrent(wxString rteName, double m_lat, double m_lon, double maxDistance);
 	int FindTCurrentStation(double m_lat, double m_lon, double searchDist);
 	int FindClosestTCurrentStation(int legNum, double m_lat, double m_lon);
 	
