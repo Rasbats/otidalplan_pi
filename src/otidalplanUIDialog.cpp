@@ -210,7 +210,7 @@ otidalplanUIDialog::otidalplanUIDialog(wxWindow *parent, otidalplan_pi *ppi)
 	m_default_configuration_path = ppi->StandardPath()
 		+ _T("otidalplan_config.xml");
 	
-	if (!OpenXML(m_default_configuration_path, true)) {
+	if (!OpenXML(m_default_configuration_path, false)) {
 		// create directory for plugin files if it doesn't already exist 
 		wxFileName fn(m_default_configuration_path);
 		wxFileName fn2 = fn.GetPath();
