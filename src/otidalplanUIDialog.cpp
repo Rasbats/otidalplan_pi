@@ -228,7 +228,7 @@ otidalplanUIDialog::otidalplanUIDialog(wxWindow *parent, otidalplan_pi *ppi)
 		m_FolderSelected = *pTC_Dir;
 
 		m_dirPicker1->SetPath(m_FolderSelected);
-		m_dirPicker1->GetTextCtrlValue();
+		//m_dirPicker1->GetTextCtrlValue();
 	}
 	else {
 		m_dirPicker1->SetPath(m_FolderSelected);
