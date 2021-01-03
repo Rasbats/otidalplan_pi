@@ -121,7 +121,6 @@ otidalplanUIDialogBase::otidalplanUIDialogBase(wxWindow* parent, wxWindowID id, 
 	m_buttonAttach = new wxButton(sbSizer4->GetStaticBox(), wxID_ANY, _("Attach Currents"), wxDefaultPosition, wxDefaultSize, 0);
 	fgSizer2->Add(m_buttonAttach, 0, wxALL, 5);
 
-
 	bSizer1->Add(fgSizer2, 1, wxEXPAND, 5);
 
 
@@ -187,6 +186,7 @@ otidalplanUIDialogBase::otidalplanUIDialogBase(wxWindow* parent, wxWindowID id, 
 	m_menu3->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(otidalplanUIDialogBase::OnDeleteAllRoutes), this, m_mDeleteAllRoutes->GetId());
 	m_mHelp->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(otidalplanUIDialogBase::OnInformation), this, m_mInformation->GetId());
 	m_mHelp->Bind(wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(otidalplanUIDialogBase::OnAbout), this, m_mAbout->GetId());
+
 }
 
 otidalplanUIDialogBase::~otidalplanUIDialogBase()

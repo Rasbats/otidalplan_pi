@@ -37,7 +37,7 @@
 #include "version.h"
 
 #define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    15
+#define     MY_API_VERSION_MINOR    16
 
 #include "ocpn_plugin.h"
 #include "otidalplanOverlayFactory.h"
@@ -54,7 +54,7 @@
 #define otidalplan_TOOL_POSITION    -1          // Request default positioning of toolbar tool
 
 
-class otidalplan_pi : public opencpn_plugin_115
+class otidalplan_pi : public opencpn_plugin_116
 {
 public:
       otidalplan_pi(void *ppimgr);

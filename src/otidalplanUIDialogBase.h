@@ -79,7 +79,6 @@ protected:
 	virtual void OnInformation(wxCommandEvent& event) { event.Skip(); }
 	virtual void OnAbout(wxCommandEvent& event) { event.Skip(); }
 
-
 public:
 	wxTextCtrl* m_textCtrl1;
 	wxTextCtrl* m_tRouteName;

@@ -132,6 +132,7 @@ public:
 	wxString Name, m_GUID;
 	int index;
 	wxString lat, lon;
+	wxString visible;
 
 };
 
@@ -180,6 +181,7 @@ public:
 	wxString rate;
 	wxString icon_name;
 	bool show_name;
+	wxString visible;
 	int routepoint;
 
 };
@@ -312,7 +314,7 @@ public:
 	wxString rte_start;
 	wxString rte_end;
 	
-	void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype, wxString ptTime);
+	void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype, wxString ptviz, wxString ptTime);
 
 protected:
 	
@@ -358,8 +360,11 @@ private:
 	wxString mySelectedRoute;
 
 	void DummyDR(wxCommandEvent& event, bool write_file, int Pattern);
-	void CalcDR(wxCommandEvent& event, bool write_file, int Pattern);
-	void CalcETA(wxCommandEvent& event, bool write_file, int Pattern);
+	void CalcTimedDR(wxCommandEvent& event, bool write_file, int Pattern);
+	void CalcTimedETA(wxCommandEvent& event, bool write_file, int Pattern);
+	void DummyTimedDR(wxCommandEvent& event, bool write_file, int Pattern);
+
+	wxDateTime AdvanceSeconds(wxDateTime currentTime, double HoursToAdvance);
 
 	double ReadNavobj();
 	
@@ -386,6 +391,7 @@ private:
 	
 	
 	wxString waypointName[200];
+	wxString waypointVisible[200];
 
 };
 
