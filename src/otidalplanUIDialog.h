@@ -133,6 +133,7 @@ public:
 	int index;
 	wxString lat, lon;
 	wxString visible;
+	wxString sym;
 
 };
 
@@ -390,8 +391,8 @@ private:
 	bool dbg;
 	
 	
-	wxString waypointName[200];
-	wxString waypointVisible[200];
+	wxString waypointName[2000];
+	wxString waypointVisible[2000];
 
 };
 

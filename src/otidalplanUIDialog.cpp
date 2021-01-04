@@ -722,7 +722,7 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 	s_MaxDist.ToDouble(&maxDist);
 
 	double lati, loni;
-	double latN[200], lonN[200];
+	double latN[2000], lonN[2000];
 	double latF, lonF;
 
 	Position my_point;
@@ -797,6 +797,7 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 	wxDateTime dtStart, dtEnd, interimDateTimeETA;
 	int tcRefNum, last_tcRefNum;
 	tcRefNum = 0;
+	last_tcRefNum = 0;
 
 	sdt = m_textCtrl1->GetValue(); // date/time route starts
 	dt.ParseDateTime(sdt);
@@ -809,9 +810,9 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 	//
 	// 
 	//
+
 	int wpn = 0;
 	double VBG; // velocity of boat over ground
-	double remainingDistance = 0;
 	VBG = speed;
 
 	double latD, lonD; //latlon for the projected tide positions
@@ -835,13 +836,6 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 
 			PositionBearingDistanceMercator_Plugin(latN[wpn], lonN[wpn], myBrng, speed / 2, &latD, &lonD);
 			tcRefNum = FindTCurrentStation(latD, lonD, maxDist);
-
-			if (tcRefNum == 0) {
-				tcRefNum = last_tcRefNum;
-			}
-			else {
-				last_tcRefNum = tcRefNum;
-			}
 
 			if (tcRefNum != 0) {
 				dummyTideArrow = FindDummyTCurrent(tcRefNum);  // use at each waypoint
@@ -888,13 +882,6 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 						// work out tc
 						PositionBearingDistanceMercator_Plugin(lati, loni, myBrng, speed / 2, &latD, &lonD);
 						tcRefNum = FindTCurrentStation(latD, lonD, maxDist);
-						if (tcRefNum == 0) {
-							tcRefNum = last_tcRefNum;
-						}
-						else {
-
-							last_tcRefNum = tcRefNum;
-						}
 
 						if (tcRefNum != 0) {
 							dummyTideArrow = FindDummyTCurrent(tcRefNum); // update as we move along first leg
@@ -938,13 +925,6 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 			PositionBearingDistanceMercator_Plugin(latN[wpn], lonN[wpn], myBrng, speed / 2, &latD, &lonD);
 			tcRefNum = FindTCurrentStation(latD, lonD, maxDist);
 
-			if (tcRefNum == 0) {
-				tcRefNum = last_tcRefNum;
-			}
-			else {
-				last_tcRefNum = tcRefNum;
-			}
-
 			if (tcRefNum != 0) {
 				dummyTideArrow = FindDummyTCurrent(tcRefNum);  // use at each waypoint
 
@@ -970,18 +950,11 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 				// space for an EP
 				// we have the position for the first EP on the new leg ... latloni
 
-				remainingDistance = timeToRun / VBG;
-				PositionBearingDistanceMercator_Plugin(latN[wpn], lonN[wpn], myBrng, remainingDistance, &lati, &loni);  // first waypoint of the new leg
+				waypointDistance = timeToRun / VBG;
+				PositionBearingDistanceMercator_Plugin(latN[wpn], lonN[wpn], myBrng, waypointDistance, &lati, &loni);  // first waypoint of the new leg
 
 				PositionBearingDistanceMercator_Plugin(latN[wpn], lonN[wpn], myBrng, speed / 2, &latD, &lonD);
 				tcRefNum = FindTCurrentStation(latD, lonD, maxDist);
-
-				if (tcRefNum == 0) {
-					tcRefNum = last_tcRefNum;
-				}
-				else {
-					last_tcRefNum = tcRefNum;
-				}
 
 				if (tcRefNum != 0) {
 					dummyTideArrow = FindDummyTCurrent(tcRefNum);  // use at each waypoint
@@ -1020,13 +993,6 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 
 						PositionBearingDistanceMercator_Plugin(lati, loni, myBrng, speed / 2, &latD, &lonD);
 						tcRefNum = FindTCurrentStation(latD, lonD, maxDist);
-						if (tcRefNum == 0) {
-							tcRefNum = last_tcRefNum;
-						}
-						else {
-
-							last_tcRefNum = tcRefNum;
-						}
 
 						if (tcRefNum != 0) {
 							dummyTideArrow = FindDummyTCurrent(tcRefNum); // update as we move along the leg
@@ -1141,7 +1107,7 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 		s_MaxDist.ToDouble(&maxDist);
 
 		double lati, loni;
-		double latN[200], lonN[200];
+		double latN[2000], lonN[2000];
 		double latF, lonF;
 
 		Position my_point;
@@ -1246,6 +1212,7 @@ void otidalplanUIDialog::DummyDR(wxCommandEvent& event, bool write_file, int Pat
 		wxDateTime dtStart, dtEnd, interimDateTimeETA;
 		int tcRefNum, last_tcRefNum;
 		tcRefNum = 0;
+		last_tcRefNum = 0;
 
 		sdt = m_textCtrl1->GetValue(); // date/time route starts
 		dt.ParseDateTime(sdt);
@@ -1850,7 +1817,7 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 		speed = speed * interval;
 
 		double lati, loni;
-		double latN[200], lonN[200];
+		double latN[2000], lonN[2000];
 		double latF, lonF;
 		
 
@@ -2503,6 +2470,7 @@ double otidalplanUIDialog::ReadNavobj() {
 
 	wxString wpt_guid;
 	wxString wpt_name;
+	wxString wpt_sym;
 	wxString wpt_visible;
 
 	wxString navobj_path = otidalplanUIDialog::StandardPath();
@@ -2549,6 +2517,7 @@ double otidalplanUIDialog::ReadNavobj() {
 
 						myRtePt.lat = rte_lat;
 						myRtePt.lon = rte_lon;								
+                        
 
 						for (TiXmlElement* i = f->FirstChildElement(); i; i = i->NextSiblingElement()) {
 							
@@ -2557,12 +2526,21 @@ double otidalplanUIDialog::ReadNavobj() {
 								wpt_name = wxString::FromUTF8(i->GetText());								
 								myRtePt.Name = wpt_name;								
 
-							}							
+							}		
 
+							if (!strcmp(i->Value(), "sym")) {
 
-							if (!strcmp(i->Value(), "extensions")) {
+								wpt_sym = wxString::FromUTF8(i->GetText());
+								if (wpt_sym == "Empty" || wpt_sym == "Symbol-Empty" || wpt_sym == "empty"){
+									myRtePt.visible = "0";
+								}
+								else {
+									myRtePt.visible = "1";
+								}
 
-								bool foundViz = false;
+							}
+
+							if (!strcmp(i->Value(), "extensions")) {								
 
 								for (TiXmlElement* j = i->FirstChildElement(); j; j = j->NextSiblingElement()) {
 
@@ -2574,19 +2552,16 @@ double otidalplanUIDialog::ReadNavobj() {
 									}
 
 									if (!strcmp(j->Value(), "opencpn:viz")) {
-										foundViz = true;
 										wpt_visible = wxString::FromUTF8(j->GetText());	
 										myRtePt.visible = wpt_visible;
+
+										if (wpt_sym == "Empty" || wpt_sym == "Symbol-Empty" || wpt_sym == "empty") {
+											myRtePt.visible = "0";
+										}										
 									}
 
-								}
-
-								if (!foundViz) {
-									myRtePt.visible = "1";
-								}
-								
+								}															
 							}
-
 						}
 
 						myRtePt.index = myIndex;
@@ -2744,7 +2719,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 		speed = speed * interval;
 
 		double lati, loni;
-		double latN[200], lonN[200];
+		double latN[2000], lonN[2000];
 		double latF, lonF;
 
 		Position my_point;
@@ -3143,10 +3118,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 					ptr.icon_name = wxT("Triangle");
 					tr.m_positionslist.push_back(ptr);
 
-
-
 					DistanceBearingMercator_Plugin(latN[wpn + 1], lonN[wpn + 1], lati, loni, &myBrng, &waypointDistance); // how far to the next waypoint?
-					//PositionBearingDistanceMercator_Plugin(lati, loni, myBrng, remainingDistance, &latF, &lonF);  // first waypoint of the leg
 
 					latF = lati;
 					lonF = loni;
@@ -3683,21 +3655,12 @@ void otidalplanUIDialog::SelectRoutePoints(wxString routeName) {
 
 		if (routeName == (*it).Name) {
 			Position myPosition;
-			for (std::vector<rtept>::iterator it2 = (*it).m_rteptList.begin(); it2 != (*it).m_rteptList.end(); it2++) {				
-				
+			for (std::vector<rtept>::iterator it2 = (*it).m_rteptList.begin(); it2 != (*it).m_rteptList.end(); it2++) {												
+
 				myPosition.lat = (*it2).lat;
 				myPosition.lon = (*it2).lon;
-				myPosition.name = (*it2).Name;
-				
-				wxString isviz = myPosition.visible = (*it2).visible;
-
-				if (myPosition.visible == wxEmptyString) {
-					myPosition.visible = "1";
-				}
-				else {
-					myPosition.visible = isviz;
-				}
-				
+				myPosition.name = (*it2).Name;				
+				myPosition.visible = (*it2).visible;
 				my_positions.push_back(myPosition);
 			}
 
@@ -3818,6 +3781,11 @@ wxString otidalplanUIDialog::SelectRoute(bool isDR) {
 								}
 								else {
 									myRoutePoint.visible = (*it).visible;
+								}
+
+								myRoutePoint.sym = (*it).sym;
+								if (myRoutePoint.sym == "Empty" || myRoutePoint.sym == "Symbol-Empty" || myRoutePoint.sym == "empty") {
+									myRoutePoint.visible = "0";
 								}
 
 								nextRoutePointIndex = 1;
