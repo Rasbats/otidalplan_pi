@@ -30,14 +30,9 @@
 #include "wx/wxprec.h"
 
 #ifndef  WX_PRECOMP
-  #include "wx/wx.h"
-  #include <wx/glcanvas.h>
+#include "wx/wx.h"
+#include <wx/glcanvas.h>
 #endif //precompiled headers
-
-#include "version.h"
-
-#define     MY_API_VERSION_MAJOR    1
-#define     MY_API_VERSION_MINOR    16
 
 #include "ocpn_plugin.h"
 #include "otidalplanOverlayFactory.h"

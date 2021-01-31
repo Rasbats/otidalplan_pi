@@ -175,12 +175,14 @@ bool otidalplan_pi::DeInit(void)
 
 int otidalplan_pi::GetAPIVersionMajor()
 {
-      return MY_API_VERSION_MAJOR;
+      return atoi(API_VERSION);
 }
 
 int otidalplan_pi::GetAPIVersionMinor()
 {
-      return MY_API_VERSION_MINOR;
+      std::string v(API_VERSION);
+    size_t dotpos = v.find('.');
+    return atoi(v.substr(dotpos + 1).c_str());
 }
 
 int otidalplan_pi::GetPlugInVersionMajor()
