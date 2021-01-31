@@ -74,20 +74,32 @@ otidalplan_pi::otidalplan_pi(void *ppimgr)
       :opencpn_plugin_116(ppimgr)
 {
       // Create the PlugIn icons
-      initialize_images();
+     initialize_images();
 
-	  wxString shareLocn = *GetpSharedDataLocation() +
-		  _T("plugins") + wxFileName::GetPathSeparator() +
-		  _T("otidalplan_pi") + wxFileName::GetPathSeparator()
-		  + _T("data") + wxFileName::GetPathSeparator();
-	  wxImage panelIcon(shareLocn + _T("otidalplan_panel_icon.png"));
+	wxFileName fn;
 
-	  if (panelIcon.IsOk())
-		  m_panelBitmap = wxBitmap(panelIcon);
-	  else
-		  wxLogMessage(_T("    otidalplan panel icon NOT loaded"));
+	auto path = GetPluginDataDir("otidalplan_pi");
+	fn.SetPath(path);
+	fn.AppendDir("data");
+	fn.SetFullName("otidalplan_panel_icon.png");
 
-      m_bShowotidalplan = false;   
+	path = fn.GetFullPath();
+
+	wxInitAllImageHandlers();
+
+	wxLogDebug(wxString("Using icon path: ") + path);
+	if (!wxImage::CanRead(path)) {
+		wxLogDebug("Initiating image handlers.");
+		wxInitAllImageHandlers();
+	}
+	wxImage panelIcon(path);
+	if (panelIcon.IsOk())
+		m_panelBitmap = wxBitmap(panelIcon);
+	else
+		wxLogWarning("otidalplan panel icon has NOT been loaded");	
+		
+		
+    m_bShowotidalplan = false;   
 
 }
 

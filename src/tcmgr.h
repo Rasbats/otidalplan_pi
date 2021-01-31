@@ -297,7 +297,7 @@ private:
       harmonic_file_entry *harmonic_file_list;
       FILE                    *IndexFile;
       char                    *hfile_name;
-      char                    location[200];
+      char                    location[2000];
       char                    *indexfile_name;
       char                    *userfile_name;
       char                    *IDX_reference_name;

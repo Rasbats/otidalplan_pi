@@ -28,15 +28,20 @@ void initialize_images(void)
 	}
 
 #ifdef OTIDALPLAN_USE_SVG
+
 	wxFileName fn;
-	fn.SetPath(*GetpSharedDataLocation());
-	fn.AppendDir(_T("plugins"));
-	fn.AppendDir(_T("otidalplan_pi"));
+	wxString tmp_path;
+
+	tmp_path = GetPluginDataDir("otidalplan_pi");
+	fn.SetPath(tmp_path);
 	fn.AppendDir(_T("data"));
+
 	fn.SetFullName(_T("otidalplan_pi.svg"));
 	_svg_otidalplan = fn.GetFullPath();
 	fn.SetFullName(_T("otidalplan_pi_toggled.svg"));
 	_svg_otidalplan_toggled = fn.GetFullPath();
+
+
 #endif
 
 
