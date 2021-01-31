@@ -34,17 +34,17 @@ if (NOT QT_ANDROID)
     endif ()
   endif ()
 
-  set(wxWidgets_USE_LIBS base core net xml html adv stc)
-
-  find_package(wxWidgets REQUIRED base core net xml html adv stc)
+  set(wxWidgets_USE_LIBS base core net xml html)
+  set(BUILD_SHARED_LIBS TRUE)
+  find_package(wxWidgets REQUIRED base core net xml html)
+  
   if (MSYS)
     # This is just a hack. I think the bug is in FindwxWidgets.cmake
-    string(
-      REGEX REPLACE "/usr/local" "\\\\;C:/MinGW/msys/1.0/usr/local"
-      wxWidgets_INCLUDE_DIRS ${wxWidgets_INCLUDE_DIRS}
-    )
+    string( REGEX REPLACE "/usr/local" "\\\\;C:/MinGW/msys/1.0/usr/local" wxWidgets_INCLUDE_DIRS ${wxWidgets_INCLUDE_DIRS})
   endif ()
+  
   include(${wxWidgets_USE_FILE})	
+  
 endif ()
 
 # On Android, PlugIns need a specific linkage set....
