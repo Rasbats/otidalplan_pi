@@ -41,6 +41,7 @@
 
 #define ABOUT_AUTHOR_URL "http://mikerossiter.co.uk"
 
+#include "config.h"   // made by the build process
 
 //----------------------------------------------------------------------------------------------------------
 //    The PlugIn Class Definition
