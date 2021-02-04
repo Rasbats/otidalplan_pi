@@ -360,7 +360,6 @@ private:
 
 	wxString mySelectedRoute;
 
-	void DummyDR(wxCommandEvent& event, bool write_file, int Pattern);
 	void CalcTimedDR(wxCommandEvent& event, bool write_file, int Pattern);
 	void CalcTimedETA(wxCommandEvent& event, bool write_file, int Pattern);
 	void DummyTimedDR(wxCommandEvent& event, bool write_file, int Pattern);
