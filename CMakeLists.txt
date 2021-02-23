@@ -86,12 +86,7 @@ SET(SRC
         src/icons.h
         src/icons.cpp
         src/tcmgr.cpp       
-        src/tcmgr.h
-        src/tinystr.h
-	    src/tinyxml.h
-		src/tinyxml.cpp
-	    src/tinyxmlerror.cpp
-		src/tinyxmlparser.cpp		
+        src/tcmgr.h	
 		src/NavFunc.cpp
 		src/NavFunc.h
 		src/routeprop.cpp
