@@ -128,23 +128,19 @@ class NewPositionDialog;
 class rtept
 {
 public:
-
 	wxString Name, m_GUID;
 	int index;
 	wxString lat, lon;
 	wxString visible;
 	wxString sym;
-
+	wxString planned_speed;
 };
 
 class rte
 {
 public:
-
 	wxString Name;
-
 	vector<rtept> m_rteptList;
-
 };
 
 class routeCurrent
@@ -161,8 +157,6 @@ public:
 
 	wxString LegName;
 	vector<rtept> m_rteptList;
-	
-
 };
 
 
@@ -184,6 +178,7 @@ public:
 	bool show_name;
 	wxString visible;
 	int routepoint;
+	wxString planned_speed;
 
 };
 
