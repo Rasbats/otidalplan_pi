@@ -123,6 +123,26 @@ otidalplanUIDialogBase::otidalplanUIDialogBase(wxWindow* parent, wxWindowID id, 
 
 	bSizer1->Add(fgSizer2, 1, wxEXPAND, 5);
 
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer(wxVERTICAL);
+
+	wxStaticBoxSizer* sbSizer61;
+	sbSizer61 = new wxStaticBoxSizer(new wxStaticBox(sbSizer4->GetStaticBox(), wxID_ANY, wxEmptyString), wxVERTICAL);
+
+	m_cbPlannedSpeed = new wxCheckBox(sbSizer61->GetStaticBox(), wxID_ANY, _("Use Planned Speeds"), wxDefaultPosition, wxDefaultSize, 0);
+	m_cbPlannedSpeed->SetValue(true);
+	m_cbPlannedSpeed->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
+
+	sbSizer61->Add(m_cbPlannedSpeed, 0, wxALL, 5);
+
+	m_staticText6 = new wxStaticText(sbSizer61->GetStaticBox(), wxID_ANY, _("If checked the speeds used \nfor the ETA calculations will\ncome from speeds \nentered in the route table.\n\nIf unchecked the speeds\nwill be taken from the entry\non this page.\n"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText6->Wrap(-1);
+	sbSizer61->Add(m_staticText6, 0, wxALL, 5);
+
+
+	bSizer2->Add(sbSizer61, 1, wxEXPAND, 5);
+
+	bSizer1->Add(bSizer2, 1, wxEXPAND, 5);
 
 	sbSizer4->Add(bSizer1, 1, wxEXPAND, 5);
 

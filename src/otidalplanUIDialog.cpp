@@ -816,7 +816,7 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 	VBG = speed;
 
 	double latD, lonD; //latlon for the projected tide positions
-	double legDistance, waypointDistance;
+	double waypointDistance;
 	double fractpart, intpart;
 	int numEP;
 	double timeToWaypoint, timeToRun;
@@ -1232,7 +1232,7 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 	myLast = 0;
 	myDistForBrng = 0;
 	double total_dist = 0;
-	int i, c;
+	int c;
 
 	latF = latN[0];
 	lonF = lonN[0];
@@ -1243,10 +1243,8 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 	double VBG;
 	VBG = 0;
 	int tc_index = 0;
-	c = 0;
-	double myD, myB;
-	double myDI;
-
+	c = 0;	
+	
 	bool skipleg = false;
 	double lastVBG = 0;
 	double lastVBG1 = 0;
@@ -1472,7 +1470,7 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 
 				timeToWaypoint = waypointDistance / VBG;
 				fractpart = modf(timeToWaypoint, &intpart);
-				numEP = intpart;
+				numEP = intpart + 1;
 
 				if (numEP == 0) {
 					timeToRun = 1 - timeToWaypoint;
@@ -1919,12 +1917,12 @@ double otidalplanUIDialog::ReadNavobj() {
 											myRtePt.visible = "0";
 										}										
 									}
-
-									if (!strcmp(j->Value(), "opencpn:rte_properties")) {
-										wpt_pSpeed = wxString::FromUTF8(j->Attribute("planned_speed"));
-										myRtePt.planned_speed = wpt_pSpeed;
+									if (m_cbPlannedSpeed->IsChecked()) {
+										if (!strcmp(j->Value(), "opencpn:rte_properties")) {
+											wpt_pSpeed = wxString::FromUTF8(j->Attribute("planned_speed"));
+											myRtePt.planned_speed = wpt_pSpeed;
+										}
 									}
-
 								}															
 							}
 						}						
@@ -2339,7 +2337,10 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 
 					timeToWaypoint = waypointDistance / VBG;
 					fractpart = modf(timeToWaypoint, &intpart);
-					numEP = intpart;
+					numEP = intpart + 1;
+
+					//wxString sSpeed = wxString::Format("%i", numEP);
+								//wxMessageBox(sSpeed);
 
 					if (numEP == 0) {
 
@@ -2390,8 +2391,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 							ptr.set = wxString::Format(_T("%03.0f"), dir);
 							ptr.rate = wxString::Format(_T("%5.1f"), spd);
 							ptr.icon_name = wxT("Triangle");
-							tr.m_positionslist.push_back(ptr);
-
+							tr.m_positionslist.push_back(ptr);							
 
 							DistanceBearingMercator_Plugin(latN[wpn + 1], lonN[wpn + 1], lati, loni, &myBrng, &waypointDistance); // how far to the next waypoint?
 							timeToWaypoint = waypointDistance / VBG;

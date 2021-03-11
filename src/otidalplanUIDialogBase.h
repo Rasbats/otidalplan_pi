@@ -65,6 +65,7 @@ protected:
 	wxButton* m_buttonAttach;
 	wxMenu* m_menu3;
 	wxMenu* m_mHelp;
+	wxStaticText* m_staticText6;
 
 	// Virtual event handlers, overide them in your derived class
 	virtual void OnClose(wxCloseEvent& event) { event.Skip(); }
@@ -87,6 +88,7 @@ public:
 	wxChoice* m_cMaxDist;
 	wxChoice* m_cLegDist;
 	wxCheckBox* m_cbAttach;
+	wxCheckBox* m_cbPlannedSpeed;
 	wxDirPickerCtrl* m_dirPicker1;
 	wxMenuBar* m_menubar3;
 
