@@ -261,7 +261,7 @@ public:
 	wxString MakeDateTimeLabel(wxDateTime myDateTime);
 	void OnInformation(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
-	void OnShowRouteTable();
+	
 	void GetTable(wxString myRoute);
 	void AddChartRoute(wxString myRoute);
 	void AddTidalRoute(TidalRoute tr);

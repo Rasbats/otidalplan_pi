@@ -437,87 +437,6 @@ void otidalplanUIDialog::OnSummary(wxCommandEvent& event)
 		
 }
 
-
-void otidalplanUIDialog::OnShowRouteTable(){
-	
-	wxString name;
-
-	for (std::list<TidalRoute>::iterator it = m_TidalRoutes.begin();
-		it != m_TidalRoutes.end(); it++) {
-
-		if (!m_TidalRoutes.empty()){
-			name = (*it).Name;
-			break;
-		}
-		else {
-			wxMessageBox(_("Please select or generate a route"));
-			return;
-		}
-	}
-
-	RouteProp* routetable = new RouteProp(this, 7000, _T("Tidal Routes"), wxPoint(200, 200), wxSize(650, -1), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
-
-	int in = 0;
-
-	wxString lat;
-	wxString lon;
-	wxString etd;
-	wxString cts;
-	wxString smg;
-	wxString dis;
-	wxString brg;
-	wxString set;
-	wxString rat;
-
-	routetable->m_PlanSpeedCtl->SetValue(pPlugIn->m_potidalplanDialog->m_tSpeed->GetValue());
-
-	for (std::list<TidalRoute>::iterator it = m_TidalRoutes.begin();
-		it != m_TidalRoutes.end(); it++) {
-		name = (*it).Name;
-		if (m_tRouteName->GetValue() == name){
-
-			routetable->m_RouteNameCtl->SetValue(name);
-			routetable->m_RouteStartCtl->SetValue((*it).Start);
-			routetable->m_RouteDestCtl->SetValue((*it).End);
-
-			routetable->m_TotalDistCtl->SetValue((*it).Distance);
-			routetable->m_TimeEnrouteCtl->SetValue((*it).Time);
-			routetable->m_StartTimeCtl->SetValue((*it).StartTime);			
-			routetable->m_TypeRouteCtl->SetValue((*it).Type);
-
-			for (std::list<Position>::iterator itp = (*it).m_positionslist.begin();
-				itp != (*it).m_positionslist.end(); itp++) {
-
-				name = (*itp).name;
-				lat = (*itp).lat;
-				lon = (*itp).lon;
-				etd = (*itp).time;
-				cts = (*itp).CTS;
-				smg = (*itp).SMG;
-				dis = (*itp).distTo;
-				brg = (*itp).brgTo;
-				set = (*itp).set;
-				rat = (*itp).rate;
-
-				routetable->m_wpList->InsertItem(in, _T(""), -1);
-				routetable->m_wpList->SetItem(in, 1, name);
-				routetable->m_wpList->SetItem(in, 2, dis);
-				routetable->m_wpList->SetItem(in, 4, lat);
-				routetable->m_wpList->SetItem(in, 5, lon);
-				routetable->m_wpList->SetItem(in, 6, etd);
-				routetable->m_wpList->SetItem(in, 8, cts);
-				routetable->m_wpList->SetItem(in, 9, set);
-				routetable->m_wpList->SetItem(in, 10, rat);
-
-				in++;
-			}
-		}
-	}
-
-	routetable->Show();
-
-}
-
 void otidalplanUIDialog::GetTable(wxString myRoute){
 
 	wxString name;
@@ -541,7 +460,13 @@ void otidalplanUIDialog::GetTable(wxString myRoute){
 	wxString set;
 	wxString rat;
 
-	routetable->m_PlanSpeedCtl->SetValue(pPlugIn->m_potidalplanDialog->m_tSpeed->GetValue());
+	if (!m_cbPlannedSpeed->IsChecked()) {
+		routetable->m_PlanSpeedCtl->SetValue(pPlugIn->m_potidalplanDialog->m_tSpeed->GetValue());
+	}
+	else {
+		routetable->m_PlanSpeedCtl->SetValue("Variable Speeds");
+	}
+	
 
 	for (std::list<TidalRoute>::iterator it = m_TidalRoutes.begin();
 		it != m_TidalRoutes.end(); it++) {
@@ -686,7 +611,7 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 	dummyTC.clear();
 	tc thisTC;
 
-	wxString thisRoute = SelectRoute(true);
+	wxString thisRoute = SelectRoute(true);  // this function gets the route positions and planned speeds for each routepoint
 
 	if (thisRoute == wxEmptyString) {
 		wxMessageBox("No route has been selected");
@@ -1336,6 +1261,7 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 	for (wpn; wpn < n; wpn++) {
 
 		isviz = waypointVisible[wpn];
+		VBG = planned_speed[wpn + 1];
 
 		DistanceBearingMercator_Plugin(latN[wpn + 1], lonN[wpn + 1], latN[wpn], lonN[wpn], &myBrng, &myDist);
 		legDistance = myDist;
@@ -1811,7 +1737,9 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 
 
 double otidalplanUIDialog::ReadNavobj() {
-
+	//
+	// This is where we pick up the speeds from the route tables for all the routes in navobj.xml and attach them to datapoints
+	//
 	rte myRte;
 	rtept myRtePt;
 	vector<rtept> my_points;
@@ -1827,6 +1755,8 @@ double otidalplanUIDialog::ReadNavobj() {
 	wxString wpt_sym;
 	wxString wpt_visible;
 	wxString wpt_pSpeed;
+
+	wxString m_pSpeed;
 
 	wxString navobj_path = otidalplanUIDialog::StandardPath();
 	wxString myFile = navobj_path + _T("navobj.xml");
@@ -1856,6 +1786,11 @@ double otidalplanUIDialog::ReadNavobj() {
 				nameFound = false;
 				my_points.clear();
 
+				//
+				// we need the planned speed for the route to replace the dialog value if we are using the edited route table 
+				// otherwise the default dialog speed is used
+				//
+
 				for (TiXmlElement* f = e->FirstChildElement(); f; f = f->NextSiblingElement()) {
 
 					if (!strcmp(f->Value(), "name")) {
@@ -1863,10 +1798,28 @@ double otidalplanUIDialog::ReadNavobj() {
 						nameFound = true;
 					}
 
+					if (!m_cbPlannedSpeed->IsChecked()) {
+						m_pSpeed = m_tSpeed->GetValue();
+					}
+
+					if (!strcmp(f->Value(), "extensions")) {
+
+						for (TiXmlElement* s = f->FirstChildElement(); s; s = s->NextSiblingElement()) {
+
+							if (m_cbPlannedSpeed->IsChecked()) {
+								if (!strcmp(s->Value(), "opencpn:planned_speed")) {
+									wpt_pSpeed = wxString::FromUTF8(s->GetText());								
+									m_pSpeed = wpt_pSpeed;
+									//wxMessageBox(m_pSpeed);
+								}
+							}							
+						}
+					}
+
 					if (!strcmp(f->Value(), "rtept")) {
 
 						wpt_visible = "1";
-						myRtePt.planned_speed = m_tSpeed->GetValue();
+						myRtePt.planned_speed = m_pSpeed;
 
 						rte_lat = wxString::FromUTF8(f->Attribute("lat"));
 						rte_lon = wxString::FromUTF8(f->Attribute("lon"));
@@ -1881,7 +1834,6 @@ double otidalplanUIDialog::ReadNavobj() {
 														
 								wpt_name = wxString::FromUTF8(i->GetText());								
 								myRtePt.Name = wpt_name;								
-
 							}		
 
 							if (!strcmp(i->Value(), "sym")) {
@@ -1893,7 +1845,6 @@ double otidalplanUIDialog::ReadNavobj() {
 								else {
 									myRtePt.visible = "1";
 								}
-
 							}
 
 							if (!strcmp(i->Value(), "extensions")) {								
@@ -1909,17 +1860,20 @@ double otidalplanUIDialog::ReadNavobj() {
 									
 									}
 
+									if (m_cbPlannedSpeed->IsChecked()) {
+										if (!strcmp(j->Value(), "opencpn:rte_properties")) {
+											wpt_pSpeed = wxString::FromUTF8(j->Attribute("planned_speed"));
+											myRtePt.planned_speed = wpt_pSpeed;
+											//wxMessageBox(m_pSpeed);
+										}
+									}
+									
 									if (!strcmp(j->Value(), "opencpn:viz")) {
 										wpt_visible = wxString::FromUTF8(j->GetText());	
 										myRtePt.visible = wpt_visible;
 
 										if (wpt_sym == "Empty" || wpt_sym == "Symbol-Empty" || wpt_sym == "empty") {
 											myRtePt.visible = "0";
-										}										
-									}
-									if (m_cbPlannedSpeed->IsChecked()) {
-										if (!strcmp(j->Value(), "opencpn:rte_properties")) {
-											wpt_pSpeed = wxString::FromUTF8(j->Attribute("planned_speed"));
 											myRtePt.planned_speed = wpt_pSpeed;
 										}
 									}
@@ -1929,9 +1883,7 @@ double otidalplanUIDialog::ReadNavobj() {
 						myRtePt.index = myIndex;
 						myIndex++;
 						my_points.push_back(myRtePt);
-						
 					}
-
 				}
 
 				
@@ -2076,10 +2028,10 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 		if (dbg) cout << "ETA Calculation\n";
 		double speed = 0;
 		int    interval = 1;
-
-		if (!this->m_tSpeed->GetValue().ToDouble(&speed)) { speed = 5.0; } // 5 kts default speed
-
-		speed = speed * interval;
+		if (!m_cbPlannedSpeed->IsChecked()) {
+			if (!this->m_tSpeed->GetValue().ToDouble(&speed)) { speed = 5.0; } // 5 kts default speed
+			speed = speed * interval;
+		}
 
 		double lati, loni;
 		double latN[2000], lonN[2000];
@@ -3018,7 +2970,7 @@ void otidalplanUIDialog::SaveXML(wxString filename)
 
 void otidalplanUIDialog::SelectRoutePoints(wxString routeName) {
 
-	my_positions.clear();
+	my_positions.clear(); // reading waypoint data for the selected route
 
 	for (std::vector<rte>::iterator it = my_routes.begin(); it != my_routes.end(); it++) {
 
@@ -3041,7 +2993,7 @@ void otidalplanUIDialog::SelectRoutePoints(wxString routeName) {
 
 wxString otidalplanUIDialog::SelectRoute(bool isDR) {	
 
-	ReadNavobj();
+	ReadNavobj(); // this makes the routepoints for all of the routes in navobj.xml
 
 	GetRouteDialog RouteDialog(this, -1, _("Select the route to follow"), wxPoint(200, 200), wxSize(300, 200), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
 
@@ -3054,9 +3006,7 @@ wxString otidalplanUIDialog::SelectRoute(bool isDR) {
 	int in = 0;
 	wxString routeName = _T("");
 	for (std::vector<rte>::iterator it = my_routes.begin(); it != my_routes.end(); it++) {
-
 		routeName = (*it).Name;
-
 		RouteDialog.dialogText->InsertItem(in, _T(""), -1);
 		RouteDialog.dialogText->SetItem(in, 0, routeName);
 		in++;
@@ -3107,7 +3057,7 @@ wxString otidalplanUIDialog::SelectRoute(bool isDR) {
 			// Extract the text out that cell
 			cell_contents_string = row_info.m_text;
 
-			SelectRoutePoints(cell_contents_string);  // makes route waypoints for use in the eta calculations
+			SelectRoutePoints(cell_contents_string);  // this function makes route waypoints for use in the eta calculations
 
 			double value;
 			rtept initPoint;
@@ -3125,8 +3075,6 @@ wxString otidalplanUIDialog::SelectRoute(bool isDR) {
 					countRoutePoints = 0;
 					for (std::vector<rtept>::iterator it = routePoints.begin(); it != routePoints.end(); it++)
 						countRoutePoints++;
-
-					
 
 					for (std::vector<rtept>::iterator it = routePoints.begin(); it != routePoints.end(); it++) {
 
@@ -3159,6 +3107,7 @@ wxString otidalplanUIDialog::SelectRoute(bool isDR) {
 								}
 
 								myRoutePoint.planned_speed = (*it).planned_speed;
+								//wxMessageBox(myRoutePoint.planned_speed);
 								
 								nextRoutePointIndex = 1;
 								myLeg.m_rteptList.push_back(myRoutePoint);
@@ -3175,6 +3124,7 @@ wxString otidalplanUIDialog::SelectRoute(bool isDR) {
 								myRoutePoint.lon = (*it).lon;
 
 								myRoutePoint.planned_speed = (*it).planned_speed;
+								//wxMessageBox(myRoutePoint.planned_speed);
 
 								myLeg.LegName = wxString::Format("%i", iName);
 								myLeg.m_rteptList.push_back(myRoutePoint);
@@ -3194,7 +3144,6 @@ wxString otidalplanUIDialog::SelectRoute(bool isDR) {
 		}
 		else {
 			wxMessageBox(_T("Route not found"));
-			
 			return wxEmptyString;
 		}		
 
