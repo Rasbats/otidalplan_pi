@@ -1,3 +1,4 @@
 build/*
 src/version.h
 manual/build/*
+manual/src/docs/asciidoc/otidalplan_pi.wiki
