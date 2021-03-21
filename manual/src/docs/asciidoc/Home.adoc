@@ -1,0 +1,130 @@
+== Welcome to the otidalplan_pi wiki!
+
+image::images/0.png[ALT TEXT]
+
+== Aim
+
+Estimate positions along a route and final ETA using data from tidal
+current harmonics.
+
+== References
+
+== Requirements
+
+`OpenCPN 5.2.4 and above. For the initial download an Internet connection is needed. The plugin tarball can be downloaded and imported to OpenCPN.`
+
+== 1. What the plugin does
+
+Set and rate of the tidal current from tidal current harmonics is used
+to calculate EP positions along a route and a final ETA. Courses to
+steer and speeds made good are available. Starting at different times
+the ETA for these departure times can be compared. This takes into
+account the different tidal currents likely to be experienced.
+
+== 2. Install
+
+The plugin is available in the Beta catalog of the plugin manager. After
+installation the otidalplan plugin is added to the list and can be
+enabled.
+
+In the list of available plugins:
+
+image::images/1.png[ALT TEXT]
+
+image::images/2.png[ALT TEXT]
+
+image::images/3.png[ALT TEXT]
+
+Ready to use:
+
+image::images/4.png[ALT TEXT]
+
+And in the toolbar:
+
+image::images/5.png[ALT TEXT]
+
+Showing the plugin dialog: [[/images/6.png[ALT TEXT]
+
+== Basic method
+
+[arabic]
+. Attach the tidal current stations for the planned route. This is based
+on DR positions and the maximum distance from the station.
+
+image::images/7.png[ALT TEXT]
+
+image::images/8.png[ALT TEXT]
+
+[arabic, start=2]
+. Enter the name for the route containing the EP. Tick the box to show
+the calculated route.
+. Calculate the ETA. This creates a new route containing the EP
+positions.
+
+image::images/9.png[ALT TEXT]
+
+image::images/10.png[ALT TEXT]
+
+image::images/11.png[ALT TEXT]
+
+=== Information Available
+
+== Summary
+
+Available from the menu:
+
+image::images/12.png[ALT TEXT]
+
+image::images/13.png[ALT TEXT]
+
+== Route Table
+
+image::images/14.png[ALT TEXT]
+
+image::images/15.png[ALT TEXT]
+
+image::images/16.png[ALT TEXT]
+
+== Options
+
+=== GPX file
+
+A GPX file of the EP route can be created at the same time as the new
+route is calculated. Tick the box to allow this.
+
+image::images/17.png[ALT TEXT]
+
+The GPX can be imported into OpenCPN using the Route and Mark Manager
+
+image::images/18.png[ALT TEXT]
+
+image::images/19.png[ALT TEXT]
+
+=== Tidal current harmonics
+
+The harmonics installed with OpenCPN may not cover the area you are
+navigating. Another set of harmonics can be used by selecting the folder
+containing HARMONIC.idx.
+
+image::images/20.png[ALT TEXT]
+
+=== Adjust accuracy
+
+The tidal current stations associated with a route are used based on DR
+and maximum distance from that DR. By adjusting these two parameters
+greater accuracy may be achieved.
+
+image::images/21.png[ALT TEXT]
+
+=== Use different departure times
+
+image::images/22.png[ALT TEXT]
+
+The Summary table from the menu shows the effect of using different
+departure times:
+
+image::images/24.png[ALT TEXT]
+
+Route with EP positions can be charted from the list of routes:
+
+image::images/23.png[ALT TEXT]
