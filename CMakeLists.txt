@@ -57,7 +57,7 @@ OPTION(OTIDALPLAN_USE_SVG "Use SVG graphics" ON)
 
 # -------  Plugin setup --------
 #
-project(otidalplan_pi VERSION 0.9.1)
+project(otidalplan_pi VERSION 0.9.2)
 
 set(DISPLAY_NAME otidalplan)    # Dialogs, installer artifacts, ...
 set(PLUGIN_API_NAME otidalplan) # As of GetCommonName() in plugin API
