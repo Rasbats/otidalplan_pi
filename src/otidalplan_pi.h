@@ -104,7 +104,7 @@ public:
 
 	  
 	  wxString StandardPath();
-	  otidalplanUIDialog     *m_potidalplanDialog;
+	  otidalplanUIDialog     *m_potidalplanDialog;	  
 
 private:
 	  double m_cursor_lat, m_cursor_lon;

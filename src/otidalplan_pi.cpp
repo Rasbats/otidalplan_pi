@@ -134,7 +134,7 @@ int otidalplan_pi::Init(void)
 	
 	  wxMenu dummy_menu;
 	  m_position_menu_id = AddCanvasContextMenuItem
-	  (new wxMenuItem(&dummy_menu, -1, _("Select Tidal Current")), this);
+	  (new wxMenuItem(&dummy_menu, -1, _("Delete Tidal Current Station")), this);
 	  SetCanvasContextMenuItemViz(m_position_menu_id, true);
 
       //    This PlugIn needs a toolbar icon, so request its insertion if enabled locally
@@ -451,7 +451,7 @@ void otidalplan_pi::SetColorScheme(PI_ColorScheme cs)
 {
     DimeWindow(m_potidalplanDialog);
 }
-
+/*
 void otidalplan_pi::OnContextMenuItemCallback(int id)
 {
 
@@ -466,3 +466,16 @@ void otidalplan_pi::OnContextMenuItemCallback(int id)
 		m_potidalplanDialog->OnContextMenu(m_cursor_lat, m_cursor_lon);
 	}
 }
+*/
+void otidalplan_pi::OnContextMenuItemCallback(int id)
+{
+	if (!m_potidalplanDialog)
+		return;
+
+	if (id == m_position_menu_id) {
+		m_cursor_lat = GetCursorLat();
+		m_cursor_lon = GetCursorLon();
+		m_potidalplanDialog->getTidalCurrentStation(m_cursor_lat, m_cursor_lon);
+	}
+}
+

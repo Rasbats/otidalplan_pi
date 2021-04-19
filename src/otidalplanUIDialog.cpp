@@ -611,7 +611,7 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 	dummyTC.clear();
 	tc thisTC;
 
-	wxString thisRoute = SelectRoute(true);  // this function gets the route positions and planned speeds for each routepoint
+	thisRoute = SelectRoute(true);  // this function gets the route positions and planned speeds for each routepoint
 
 	if (thisRoute == wxEmptyString) {
 		wxMessageBox("No route has been selected");
@@ -1919,7 +1919,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 		return;
 	}
 
-	wxString thisRoute = SelectRoute(false); // Gets the route information from the navobj.xml file
+	thisRoute = SelectRoute(false); // Gets the route information from the navobj.xml file
 
 	if (thisRoute == wxEmptyString) {
 		wxMessageBox("No route has been selected");
@@ -3182,7 +3182,7 @@ wxString otidalplanUIDialog::StandardPath()
 	stdPath += s; // is this necessary?
 	return stdPath;
 }
-
+/*
 void otidalplanUIDialog::OnContextMenu(double m_lat, double m_lon) {
 
 	GetRouteDialog  LegDialog(this, -1, _("Select the route leg"), wxPoint(200, 200), wxSize(300, 200), wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
@@ -3257,7 +3257,7 @@ void otidalplanUIDialog::OnContextMenu(double m_lat, double m_lon) {
 	initLat = m_lat;
 	initLon = m_lon;
 }
-
+*/
 void otidalplanUIDialog::LoadTCMFile()
 {
 	//delete m_ptcmgr;
@@ -3472,6 +3472,34 @@ double otidalplanUIDialog::distanceLatLon(double lat1, double lon1, double lat2,
 	}
 	return (dist);
 }
+
+void otidalplanUIDialog::getTidalCurrentStation(double m_lat, double m_lon) {
+	
+	bool found = true;
+	int m_tcStationId = 0;
+
+	if (dummyTC.empty()) {
+		wxMessageBox(_("No tidal current stations found. \nPlease attach the tidal currents"));
+	}
+
+	m_tcStationId = FindClosestDummyTCurrent(thisRoute, m_lat, m_lon, 1000);
+
+	for (vector<tc>::iterator it = dummyTC.begin(); it != dummyTC.end();) {
+
+		if (it->tcRef == m_tcStationId) {
+
+			it = dummyTC.erase(it);
+		} else {
+				++it;								
+		}
+		
+	}
+	
+	wxMessageBox("Data for this Tidal Current Station has been removed");
+	GetParent()->Refresh();
+}
+
+
 /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
 /*:: This function converts decimal degrees to radians :*/
 /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
