@@ -311,7 +311,7 @@ public:
 	wxString rte_end;
 	
 	void Addpoint(TiXmlElement* Route, wxString ptlat, wxString ptlon, wxString ptname, wxString ptsym, wxString pttype, wxString ptviz, wxString ptTime);
-	void otidalplanUIDialog::getTidalCurrentStation(double m_lat, double m_lon);
+	void getTidalCurrentStation(double m_lat, double m_lon);
 
 	wxString thisRoute;
 
