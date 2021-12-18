@@ -12,7 +12,7 @@ extern void initialize_images(void);
 extern wxBitmap *_img_otidalplan;
 extern wxBitmap *_img_otidalplan_pi;
 
-#ifdef OTIDALPLAN_USE_SVG
+#ifdef ocpnUSE_SVG
 extern wxString _svg_otidalplan;
 extern wxString _svg_otidalplan_toggled;
 #endif

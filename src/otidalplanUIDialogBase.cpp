@@ -20,6 +20,15 @@ otidalplanUIDialogBase::otidalplanUIDialogBase(wxWindow* parent, wxWindowID id, 
 	fgSizer1->SetFlexibleDirection(wxBOTH);
 	fgSizer1->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
 
+	wxStaticBoxSizer* sbSizer6;
+	sbSizer6 = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, _("Tidal Current Data")), wxVERTICAL);
+
+	m_dirPicker1 = new wxDirPickerCtrl(sbSizer6->GetStaticBox(), wxID_ANY, wxEmptyString, _("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE);
+	sbSizer6->Add(m_dirPicker1, 0, wxALL | wxEXPAND, 5);
+
+
+	fgSizer1->Add(sbSizer6, 1, wxEXPAND, 5);
+
 	wxStaticBoxSizer* sbSizer4;
 	sbSizer4 = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, _("Route Calculation")), wxHORIZONTAL);
 
@@ -149,14 +158,7 @@ otidalplanUIDialogBase::otidalplanUIDialogBase(wxWindow* parent, wxWindowID id, 
 
 	fgSizer1->Add(sbSizer4, 1, wxALL | wxEXPAND, 5);
 
-	wxStaticBoxSizer* sbSizer6;
-	sbSizer6 = new wxStaticBoxSizer(new wxStaticBox(this, wxID_ANY, _("Tidal Current Data")), wxVERTICAL);
-
-	m_dirPicker1 = new wxDirPickerCtrl(sbSizer6->GetStaticBox(), wxID_ANY, wxEmptyString, _("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE);
-	sbSizer6->Add(m_dirPicker1, 0, wxALL | wxEXPAND, 5);
-
-
-	fgSizer1->Add(sbSizer6, 1, wxEXPAND, 5);
+	
 
 
 	this->SetSizer(fgSizer1);

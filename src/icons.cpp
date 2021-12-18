@@ -10,7 +10,7 @@
 wxBitmap *_img_otidalplan;
 wxBitmap *_img_otidalplan_pi;
 
-#ifdef OTIDALPLAN_USE_SVG
+#ifdef ocpnUSE_SVG
 #include "ocpn_plugin.h"
 wxString _svg_otidalplan;
 wxString _svg_otidalplan_toggled;
@@ -27,7 +27,7 @@ void initialize_images(void)
 		_img_otidalplan_pi = new wxBitmap(wxImage(sm));
 	}
 
-#ifdef OTIDALPLAN_USE_SVG
+#ifdef ocpnUSE_SVG
 
 	wxFileName fn;
 	wxString tmp_path;

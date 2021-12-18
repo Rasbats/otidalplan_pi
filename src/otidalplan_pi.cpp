@@ -139,7 +139,7 @@ int otidalplan_pi::Init(void)
 
       //    This PlugIn needs a toolbar icon, so request its insertion if enabled locally
       if(m_botidalplanShowIcon)
-#ifdef OTIDALPLAN_USE_SVG
+#ifdef ocpnUSE_SVG
 				  m_leftclick_tool_id = InsertPlugInToolSVG(_T("otidalplan"), _svg_otidalplan, _svg_otidalplan, _svg_otidalplan_toggled,
 					  wxITEM_CHECK, _("otidalplan"), _T(""), NULL, otidalplan_TOOL_POSITION, 0, this);
 #else
