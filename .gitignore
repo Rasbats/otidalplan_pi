@@ -1,4 +1,8 @@
-build/*
-src/version.h
-manual/build/*
-manual/src/docs/asciidoc/otidalplan_pi.wiki
+build
+build-*
+!build-deps
+po/*.pot
+.DS_Store
+*humbs.db
+cache
+plugins
