@@ -322,38 +322,13 @@ void otidalplan_pi::OnotidalplanDialogClose()
 
 wxString otidalplan_pi::StandardPath()
 {
-	wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
+wxString stdPath(*GetpPrivateApplicationDataLocation());
 	wxString s = wxFileName::GetPathSeparator();
-#ifdef __WXMSW__
-	wxString stdPath = std_path.GetConfigDir();
-#endif
-#ifdef __WXGTK__
-	wxString stdPath = std_path.GetUserDataDir();
-#endif
-#ifdef __WXOSX__
-	wxString stdPath = (std_path.GetUserConfigDir() + s + _T("opencpn"));   // should be ~/Library/Preferences/opencpn
-#endif
 
-	return stdPath + wxFileName::GetPathSeparator() +
-		_T("plugins") + wxFileName::GetPathSeparator() +
-		_T("otidalplan") + wxFileName::GetPathSeparator();
-
-	stdPath += s + _T("plugins");
+	stdPath += s + _T("plugins") + s + _T("otidalplan_pi");
 	if (!wxDirExists(stdPath))
 		wxMkdir(stdPath);
-
-	stdPath += s + _T("otidalplan");
-
-#ifdef __WXOSX__
-	// Compatibility with pre-OCPN-4.2; move config dir to
-	// ~/Library/Preferences/opencpn if it exists
-	wxString oldPath = (std_path.GetUserConfigDir() + s + _T("plugins") + s + _T("weather_routing"));
-	if (wxDirExists(oldPath) && !wxDirExists(stdPath)) {
-		wxLogMessage("weather_routing_pi: moving config dir %s to %s", oldPath, stdPath);
-		wxRenameFile(oldPath, stdPath);
-	}
-#endif
-
+	stdPath = stdPath + s + "data";
 	if (!wxDirExists(stdPath))
 		wxMkdir(stdPath);
 

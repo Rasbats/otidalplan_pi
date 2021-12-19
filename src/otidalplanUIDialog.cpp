@@ -203,7 +203,7 @@ otidalplanUIDialog::otidalplanUIDialog(wxWindow *parent, otidalplan_pi *ppi)
     wxFileConfig *pConf = GetOCPNConfigObject();
 
     if(pConf) {
-        pConf->SetPath ( _T ( "/Settings/otidalplan" ) );
+        pConf->SetPath ( _T ( "/PlugIns/otidalplan" ) );
 
 		pConf->Read(_T("otidalplanFolder"), &m_FolderSelected);
 
@@ -266,7 +266,7 @@ otidalplanUIDialog::~otidalplanUIDialog()
 
     if(pConf) {
 
-        pConf->SetPath ( _T ( "/Settings/otidalplan" ) );
+        pConf->SetPath ( _T ( "/PlugIns/otidalplan" ) );
 
 		wxString myF = m_dirPicker1->GetPath();
 		pConf->Write(_T("otidalplanFolder"), myF);
@@ -544,6 +544,7 @@ void otidalplanUIDialog::AddChartRoute(wxString myRoute) {
 				PlugIn_Waypoint*  wayPoint = new PlugIn_Waypoint;
 				
 				wayPoint->m_MarkName = (*itp).name;
+				//wxMessageBox(wayPoint->m_MarkName);
 				if (!(*itp).lat.ToDouble(&value)) { /* error! */ }
 				lati = value;
 				if (!(*itp).lon.ToDouble(&value1)) { /* error! */ }
@@ -2268,7 +2269,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 
 					ptrDist = VBG;
 					tdist += ptrDist;
-					ptr.name = _T("EP") + epName;
+					ptr.name = epName;
 					ptr.lat = wxString::Format(_T("%8.4f"), lati);
 					ptr.lon = wxString::Format(_T("%8.4f"), loni);
 					ptr.time = dtCurrent.Format(_T(" %a %d-%b-%Y  %H:%M"));
@@ -2302,6 +2303,8 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 
 					else {
 
+						latF = lati;
+						lonF = loni;
 
 						for (int z = 1; z <= numEP; z++) {
 
@@ -2312,7 +2315,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 							epNumber++;
 							epName = "EP" + wxString::Format(wxT("%i"), epNumber);
 							PlugIn_Waypoint*  epPoint = new PlugIn_Waypoint
-							(lati, loni, wxT("Triangle"), (_T("EP") + epName));
+							(lati, loni, wxT("Triangle"), epName);
 							epPoint->m_IconName = wxT("Triangle");
 							//epPoint->m_MarkDescription = ddt;
 							epPoint->m_GUID = wxString::Format(_T("%i"), (int)GetRandomNumber(1, 4000000));
@@ -2331,7 +2334,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 							// print EP for the config file
 							ptrDist = VBG;
 							tdist += ptrDist;
-							ptr.name = _T("EP") + epName;
+							ptr.name = epName;
 							ptr.lat = wxString::Format(_T("%8.4f"), lati);
 							ptr.lon = wxString::Format(_T("%8.4f"), loni);
 							ptr.time = dtCurrent.Format(_T(" %a %d-%b-%Y  %H:%M"));
@@ -2409,7 +2412,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 					epNumber++;
 					epName = "EP" + wxString::Format(wxT("%i"), epNumber);
 					PlugIn_Waypoint*  epPoint = new PlugIn_Waypoint
-					(lati, loni, wxT("Triangle"), (_T("EP") + epName));
+					(lati, loni, wxT("Triangle"), epName);
 					epPoint->m_IconName = wxT("Triangle");
 					epPoint->m_GUID = wxString::Format(_T("%i"), (int)GetRandomNumber(1, 4000000));
 					newRoute->pWaypointList->Append(epPoint);   // for the OpenCPN display route
@@ -2427,7 +2430,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 					// print EP for the config file
 					ptrDist = waypointDistance;
 					tdist += ptrDist;
-					ptr.name = _T("EP") + epName;
+					ptr.name = epName;
 					ptr.lat = wxString::Format(_T("%8.4f"), lati);
 					ptr.lon = wxString::Format(_T("%8.4f"), loni);
 					ptr.time = dtCurrent.Format(_T(" %a %d-%b-%Y  %H:%M"));
@@ -2483,7 +2486,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 							// print EP for the config file
 							ptrDist = VBG;
 							tdist += ptrDist;
-							ptr.name = _T("EP") + epName;
+							ptr.name = epName;
 							ptr.lat = wxString::Format(_T("%8.4f"), lati);
 							ptr.lon = wxString::Format(_T("%8.4f"), loni);
 							ptr.time = dtCurrent.Format(_T(" %a %d-%b-%Y  %H:%M"));
@@ -3157,6 +3160,7 @@ wxString otidalplanUIDialog::SelectRoute(bool isDR) {
 
 wxString otidalplanUIDialog::StandardPath()
 {
+	
 	wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
 	wxString s = wxFileName::GetPathSeparator();
 
@@ -3169,19 +3173,11 @@ wxString otidalplanUIDialog::StandardPath()
 #endif
 
 
-#ifdef __WXOSX__
-	// Compatibility with pre-OCPN-4.2; move config dir to
-	// ~/Library/Preferences/opencpn if it exists
-	wxString oldPath = (std_path.GetUserConfigDir() + s);
-	if (wxDirExists(oldPath) && !wxDirExists(stdPath)) {
-		wxLogMessage("ShipDriver_pi: moving config dir %s to %s", oldPath, stdPath);
-		wxRenameFile(oldPath, stdPath);
-	}
-#endif
-
-	stdPath += s; // is this necessary?
+	stdPath += s;
+	
 	return stdPath;
 }
+	
 /*
 void otidalplanUIDialog::OnContextMenu(double m_lat, double m_lon) {
 
