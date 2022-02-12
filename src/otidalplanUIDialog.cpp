@@ -229,14 +229,21 @@ otidalplanUIDialog::otidalplanUIDialog(wxWindow *parent, otidalplan_pi *ppi)
 		pTC_Dir->Prepend(g_SData_Locn);
 		m_FolderSelected = *pTC_Dir;
 
+		
+
 		m_dirPicker1->SetPath(m_FolderSelected);
 		//m_dirPicker1->GetTextCtrlValue();
+
 	}
 	else {
 		m_dirPicker1->SetPath(m_FolderSelected);
 	}
 
+
+	//wxMessageBox(m_FolderSelected);
+	ptcmgr = new TCMgr;
 	LoadTCMFile();
+	LoadHarmonics();
 
 	m_ConfigurationDialog.pPlugIn = ppi;   
 
@@ -273,6 +280,9 @@ otidalplanUIDialog::~otidalplanUIDialog()
 		
     }
 	SaveXML(m_default_configuration_path);
+
+	delete ptcmgr;
+	ptcmgr = NULL;
 	
 }
 
@@ -337,20 +347,13 @@ void otidalplanUIDialog::OnSize( wxSizeEvent& event )
     event.Skip();
 }
 
-void otidalplanUIDialog::OpenFile(bool newestFile)
-{
-
-	m_FolderSelected = pPlugIn->GetFolderSelected();
-	m_IntervalSelected = pPlugIn->GetIntervalSelected();
-
-	LoadTCMFile();
-}
 
 void otidalplanUIDialog::OnFolderSelChanged(wxFileDirPickerEvent& event)
 {
 	m_FolderSelected = m_dirPicker1->GetPath();
 	//wxMessageBox(m_FolderSelected);
 	LoadTCMFile();
+	LoadHarmonics();
 
 	RequestRefresh(pParent);
 }
@@ -585,13 +588,13 @@ void otidalplanUIDialog::AddTidalRoute(TidalRoute tr)
 
 }
 
-TotalTideArrow otidalplanUIDialog::tcCalculate(wxDateTime tcdt, int tcInt) // for working out the tc on a leg at a specified time
+TotalTideArrow otidalplanUIDialog::tcCalculate(time_t tcdt, int tcInt) // for working out the tc on a leg at a specified time
 {
 	
 	bool bnew_val;
 	float tcvalue, dir;
 
-	m_ptcmgr->GetTideOrCurrent15(tcdt, tcInt, tcvalue, dir, bnew_val);
+	ptcmgr->GetTideOrCurrent15(tcdt, tcInt, tcvalue, dir, bnew_val);
 	tcForLeg.m_dir = dir;
 	tcForLeg.m_force = tcvalue;
 			
@@ -797,6 +800,7 @@ void otidalplanUIDialog::DummyTimedDR(wxCommandEvent& event, bool write_file, in
 
 				if (numEP == 0) {
 					timeToRun = 1 - timeToWaypoint;
+					
 
 				}
 				else {
@@ -1347,7 +1351,7 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 
 
 			if (timeToWaypoint < 1) {  // no space for DR
-				timeToRun = 1 - timeToWaypoint;		// getting to the next waypoint expend usedTime
+				timeToRun = 1 - timeToWaypoint;		// getting to the next waypoint expend usedTime				
 				dtCurrent = AdvanceSeconds(dtCurrent, timeToWaypoint);
 			}
 			else {
@@ -1397,11 +1401,11 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 
 				timeToWaypoint = waypointDistance / VBG;
 				fractpart = modf(timeToWaypoint, &intpart);
-				numEP = intpart + 1;
+				numEP = intpart;
 
 				if (numEP == 0) {
 					timeToRun = 1 - timeToWaypoint;
-
+					dtCurrent = AdvanceSeconds(dtCurrent, timeToWaypoint);
 				}
 				else {
 
@@ -1453,7 +1457,7 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 
 						if (timeToWaypoint < 1) {
 
-							dtCurrent.Subtract(HourSpan);
+							//dtCurrent.Subtract(HourSpan);
 							z = numEP + 1; // to stop the next EP being made 
 
 							//wxString sSpeed = wxString::Format("%f", ttwpt);
@@ -1591,7 +1595,7 @@ void otidalplanUIDialog::CalcTimedDR(wxCommandEvent& event, bool write_file, int
 
 						if (timeToWaypoint < 1) {
 
-							dtCurrent.Subtract(HourSpan);
+							//dtCurrent.Subtract(HourSpan);
 							z = numEP + 1; // to stop the next EP being made 
 
 							//wxString sSpeed = wxString::Format("%f", ttwpt);
@@ -2083,7 +2087,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 		tr.StartTime = sdt;
 
 		dtStart = dt;
-		dtCurrent = dt;
+		dtCurrent = dt;		
 		int wpn = 0;	// waypoint number	
 		double myBrng = 0;
 		int cl = 0;
@@ -2144,7 +2148,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 				return;
 			}
 			if (cl != 0) {
-				tcData = tcCalculate(dtCurrent, cl);
+				tcData = tcCalculate(dtCurrent.GetTicks(), cl);
 				dir = tcData.m_dir;
 				spd = fabs(tcData.m_force);
 			}
@@ -2290,14 +2294,15 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 
 					timeToWaypoint = waypointDistance / VBG;
 					fractpart = modf(timeToWaypoint, &intpart);
-					numEP = intpart + 1;
+					numEP = intpart;  // was intpart + 1
 
 					//wxString sSpeed = wxString::Format("%i", numEP);
 								//wxMessageBox(sSpeed);
 
 					if (numEP == 0) {
 
-						timeToRun = 1 - timeToWaypoint;						
+						timeToRun = 1 - timeToWaypoint;
+						dtCurrent = AdvanceSeconds(dtCurrent, timeToWaypoint);
 
 					}
 
@@ -2306,7 +2311,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 						latF = lati;
 						lonF = loni;
 
-						for (int z = 1; z <= numEP; z++) {
+						for (int z = 0; z <= numEP; z++) {
 
 							PositionBearingDistanceMercator_Plugin(latF, lonF, myBrng, VBG, &lati, &loni);  // first waypoint of the leg
 
@@ -2353,7 +2358,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 
 							if (timeToWaypoint < 1) {
 
-								dtCurrent.Subtract(HourSpan);
+								//dtCurrent.Subtract(HourSpan);
 								z = numEP + 1; // to stop the next EP being made 
 
 								//wxString sSpeed = wxString::Format("%f", ttwpt);
@@ -2368,7 +2373,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 								return;
 							}
 							if (cl != 0) {
-								tcData = tcCalculate(dtCurrent, cl);
+								tcData = tcCalculate(dtCurrent.GetTicks(), cl);
 								dir = tcData.m_dir;
 								spd = fabs(tcData.m_force);
 							}
@@ -2397,6 +2402,8 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 
 					timeToRun = timeToRun - timeToWaypoint;
 					dtCurrent = AdvanceSeconds(dtCurrent, timeToWaypoint);
+
+					// Do not add an EP. The next pos is the route wpt.
 
 				}
 				else {
@@ -2459,7 +2466,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 					}
 					else {
 
-						for (int z = 1; z <= numEP; z++) {
+						for (int z = 0; z <= numEP; z++) {
 
 							PositionBearingDistanceMercator_Plugin(latF, lonF, myBrng, VBG, &lati, &loni);  // first waypoint of the leg							
 
@@ -2505,7 +2512,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 								return;
 							}
 							if (cl != 0) {
-								tcData = tcCalculate(dtCurrent, cl);
+								tcData = tcCalculate(dtCurrent.GetTicks(), cl);
 								dir = tcData.m_dir;
 								spd = fabs(tcData.m_force);
 							}
@@ -2516,12 +2523,15 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 
 							CTSWithCurrent(myBrng, VBG, dir, spd, BC, speed); // VBG = velocity of boat over ground
 
+							//wxString sSpeed = wxString::Format("%f", VBG);
+								//wxMessageBox(sSpeed);
+
 							DistanceBearingMercator_Plugin(latN[wpn + 1], lonN[wpn + 1], lati, loni, &myBrng, &waypointDistance); // how far to the next waypoint?
 							timeToWaypoint = waypointDistance / VBG;
 
 							if (timeToWaypoint < 1) {
 
-								dtCurrent.Subtract(HourSpan);
+								//dtCurrent.Subtract(HourSpan);
 								z = numEP + 1; // to stop the next EP being made 
 
 								//wxString sSpeed = wxString::Format("%f", ttwpt);
@@ -2538,7 +2548,7 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 								return;
 							}
 							if (cl != 0) {
-								tcData = tcCalculate(dtCurrent, cl);
+								tcData = tcCalculate(dtCurrent.GetTicks(), cl);
 								dir = tcData.m_dir;
 								spd = fabs(tcData.m_force);
 							}
@@ -3256,14 +3266,70 @@ void otidalplanUIDialog::OnContextMenu(double m_lat, double m_lon) {
 */
 void otidalplanUIDialog::LoadTCMFile()
 {
-	//delete m_ptcmgr;
 	wxString TCDir = m_FolderSelected;
-	TCDir.Append(wxFileName::GetPathSeparator());
-	wxLogMessage(_("Using Tide/Current data from:  ") + TCDir);
-	
-	wxString cache_locn = TCDir;
-	m_ptcmgr = new TCMgr(TCDir, cache_locn);
+    TCDir.Append(wxFileName::GetPathSeparator());
+    wxLogMessage(_("Using Tide/Current data from:  ") + TCDir);
+
+	wxString default_tcdata0 = TCDir + _T("harmonics-dwf-20210110-free.tcd");
+	wxString default_tcdata1 = TCDir + _T("HARMONIC.IDX");
+
+	//if (!TideCurrentDataSet.GetCount()) {
+		TideCurrentDataSet.Add(default_tcdata0);
+		TideCurrentDataSet.Add(default_tcdata1);
+
+		
+	//}
 }
+
+void otidalplanUIDialog::LoadHarmonics() {
+
+  bool b_newdataset = false;
+	
+  if (!ptcmgr) {
+    ptcmgr = new TCMgr;
+    ptcmgr->LoadDataSources(TideCurrentDataSet);
+
+	
+
+  }else { 
+
+    //      Test both ways
+    wxArrayString test = ptcmgr->GetDataSet();
+    for (unsigned int i = 0; i < test.GetCount(); i++) {
+      bool b_foundi = false;
+      for (unsigned int j = 0; j < TideCurrentDataSet.GetCount(); j++) {
+        if (TideCurrentDataSet[j] == test[i]) {
+          b_foundi = true;
+          break;  // j loop
+        }
+      }
+      if (!b_foundi) {
+        b_newdataset = true;
+        break;  //  i loop
+      }
+    }
+
+    test = TideCurrentDataSet;
+    for (unsigned int i = 0; i < test.GetCount(); i++) {
+      bool b_foundi = false;
+      for (unsigned int j = 0; j < ptcmgr->GetDataSet().GetCount(); j++) {
+        if (ptcmgr->GetDataSet()[j] == test[i]) {
+          b_foundi = true;
+          break;  // j loop
+        }
+      }
+      if (!b_foundi) {
+        b_newdataset = true;
+        break;  //  i loop
+      }
+    }
+
+    if (b_newdataset) ptcmgr->LoadDataSources(TideCurrentDataSet);
+  }
+
+
+}
+
 
 TotalTideArrow otidalplanUIDialog::FindDummyTCurrent(int refNum) {
 
@@ -3271,7 +3337,7 @@ TotalTideArrow otidalplanUIDialog::FindDummyTCurrent(int refNum) {
 	tta.lat = 0;
 	tta.lon = 0;
 	
-	pIDX = m_ptcmgr->GetIDX_entry(refNum);
+	pIDX = ptcmgr->GetIDX_entry(refNum);
 
 	char type = pIDX->IDX_type;             // Entry "TCtcIUu" identifier
 	if ((type == 'c') || (type == 'C'))  // only Currents
@@ -3306,9 +3372,9 @@ int otidalplanUIDialog::FindTCurrentStation(double m_lat, double m_lon, double s
 	int i;
 
 	while (!foundTC) {
-		for (i = 1; i < m_ptcmgr->Get_max_IDX() + 1; i++)
+		for (i = 1; i < ptcmgr->Get_max_IDX() + 1; i++)
 		{
-			pIDX = m_ptcmgr->GetIDX_entry(i);
+			pIDX = ptcmgr->GetIDX_entry(i);
 
 			char type = pIDX->IDX_type;             // Entry "TCtcIUu" identifier
 			if ((type == 'c') || (type == 'C'))  // only Currents

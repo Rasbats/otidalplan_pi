@@ -239,7 +239,6 @@ public:
     otidalplanUIDialog(wxWindow *parent, otidalplan_pi *ppi);
     ~otidalplanUIDialog();
 
-	void OpenFile( bool newestFile = false );
 	void OnFolderSelChanged(wxFileDirPickerEvent& event);
     
     void SetCursorLatLon( double lat, double lon );
@@ -274,7 +273,13 @@ public:
 
 	wxString StandardPath();
 	void OnContextMenu(double m_lat, double m_lon);
-	void LoadTCMFile();
+
+	wxArrayString TideCurrentDataSet;
+
+    void LoadTCMFile();
+	void LoadHarmonics();
+	
+
 	TotalTideArrow FindDummyTCurrent(int refNum);
 	int FindClosestDummyTCurrent(wxString rteName, double m_lat, double m_lon, double maxDistance);
 	int FindTCurrentStation(double m_lat, double m_lon, double searchDist);
@@ -320,7 +325,7 @@ protected:
 
 
 private:
-
+	TCMgr    *ptcmgr;
 	double myDist;
 
 	double initLat;
@@ -349,7 +354,7 @@ private:
 	vector<routeCurrent>rteTCurrents;
 
 	TotalTideArrow tcForLeg;
-	TotalTideArrow tcCalculate(wxDateTime tcdt, int tcInt);
+	TotalTideArrow tcCalculate(time_t tcdt, int tcInt);
 
 	
 	void OnDeleteAllRoutes(wxCommandEvent& event);
@@ -380,8 +385,7 @@ private:
  
     double m_cursor_lat, m_cursor_lon;
 	wxString        g_SData_Locn;
-	TCMgr           *m_ptcmgr;
-	IDX_entry		*pIDX;
+	const IDX_entry		*pIDX;
 	wxString        *pTC_Dir;
 
 	bool error_found;

@@ -32,7 +32,7 @@ set(OCPN_RELEASE_REPO
 # -------  Plugin setup --------
 #
 set(PKG_NAME otidalplan_pi)
-set(PKG_VERSION  1.0.0)
+set(PKG_VERSION  3.0.0)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME otidalplan)    # Dialogs, installer artifacts, ...
@@ -70,7 +70,22 @@ SET(SRC
 		src/routeprop.h
 		src/tableroutes.cpp
 		src/tableroutes.h
-
+		src/IDX_entry.cpp
+	    src/IDX_entry.h
+	    src/logger.cpp
+	    src/logger.h
+	    src/Station_Data.cpp
+	    src/Station_Data.h
+	    src/TC_Error_Code.h
+	    src/TCDataFactory.cpp
+	    src/TCDataFactory.h
+	    src/TCDataSource.cpp
+	    src/TCDataSource.h
+	    src/TCDS_Ascii_Harmonic.cpp
+	    src/TCDS_Ascii_Harmonic.h
+	    src/TCDS_Binary_Harmonic.cpp
+	    src/TCDS_Binary_Harmonic.h   
+        src/tzdata.h
     )
     
 set(PKG_API_LIB api-16)  #  A directory in libs/ e. g., api-17 or api-16
