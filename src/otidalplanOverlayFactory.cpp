@@ -39,7 +39,6 @@
 #include "otidalplanUIDialogBase.h"
 #include "otidalplanOverlayFactory.h"
 #include <vector>
-#include "bbox.h"
 
 
 #ifdef __WXMSW__
@@ -850,10 +849,6 @@ void otidalplanOverlayFactory::DrawCurrentIndicators
 		tcLat = (*it).tcLat;
 		tcLon = (*it).tcLon;
 
-	
-		myLLBox = new LLBBox;
-		wxBoundingBox LLBBox(BBox->lon_min, BBox->lat_min, BBox->lon_max, BBox->lat_max);
-
 		//if( LLBBox.PointInBox( myLon, myLat, 0 )   )  {
 
 
@@ -932,12 +927,7 @@ void otidalplanOverlayFactory::DrawAllCurrentsInViewPort(PlugIn_ViewPort *BBox, 
 
 		//wxMessageBox(_T("here"));
 		
-		
-
-				
-				myLLBox = new LLBBox;
-				wxBoundingBox LLBBox( BBox->lon_min, BBox->lat_min , BBox->lon_max, BBox->lat_max );
-							
+								
 				//if( LLBBox.PointInBox( myLon, myLat, 0 )   )  {
 
 					

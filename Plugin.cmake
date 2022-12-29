@@ -50,8 +50,6 @@ set(PKG_INFO_URL https://opencpn.org/OpenCPN/plugins/otidalplan.html)
 SET(SRC
 		src/AboutDialog.cpp
 		src/AboutDialog.h
-        src/bbox.cpp
-        src/bbox.h	
         src/otidalplan_pi.h
         src/otidalplan_pi.cpp
         src/otidalplanOverlayFactory.cpp

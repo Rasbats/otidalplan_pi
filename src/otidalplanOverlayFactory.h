@@ -26,7 +26,6 @@
 
 #include <map>
 #include <wx/string.h>
-#include "bbox.h"
 #include "tcmgr.h"
 
 
@@ -147,8 +146,6 @@ private:
     otidalplanUIDialog &m_dlg;
 
     TCMgr *ctcmgr;
-    wxBoundingBox *myBox;   
-    LLBBox * myLLBox;
 
 	wxString        *pTC_Dir;
 
