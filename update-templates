@@ -11,16 +11,26 @@
 
 function usage() {
     cat << EOT
-Usage: update-templates [-T]  [treeish]
-       update-templates [-h | -l]
+Usage:
+    update-templates [-T]  <treeish>
+    update-templates [-h |-l]
+
+
 Parameters:
     treeish:
-         A shipdriver tag, branch or commit, defaults to shipdriver/master
+         A shipdriver tag or branch.
+    Recommended usage is using the latest stable (non-beta) tag
 
 Options:
-    -T   Test mode, do not auto-update
     -l   List available shipdriver tags
     -h   Print this message and exit
+    -T   Test mode, do not auto-update
+
+Examples:
+    update-templates -l                   -- List available tags
+    update-templates sd3.0.2              -- Update from sd3.0.2 tag
+    update-templates shipdriver/v3.0      -- Update from v3.0 release branch
+    update-templates shipdriver/master    -- Update from development branch
 EOT
 }
 
@@ -28,6 +38,20 @@ function list_sd_tags() {
     # List all tags in shipdriver remote with a 'sd' prefix
     git ls-remote --tags shipdriver \
         | sed  -n -e '/{}/d' -e 's|.*tags/||' -e '/^sd/p'
+}
+
+function init_shipdriver_remote() {
+    # Set up the shipdriver remote
+    if git ls-remote --exit-code shipdriver &>/dev/null; then
+        git remote remove shipdriver
+        echo "Removing existing shipdriver remote."
+    fi
+    echo "Adding new shipdriver remote"
+    git remote add shipdriver https://github.com/Rasbats/shipdriver_pi.git
+    # Fetch all available shipdriver sd* tags
+    for t in $(list_sd_tags); do
+        git fetch -q shipdriver refs/tags/$t:refs/tags/$t --no-tags
+    done
 }
 
 function update_dir() {
@@ -44,6 +68,7 @@ function update_dir() {
     }
 }
 
+
 # Exec on tmpfile to avoid file lock when updating script on Windows.
 # The directory /c exists on git bash on Windows, and hopefully only there.
 if [[ -d /c && "$0" =~ .*update-templates ]]; then
@@ -55,13 +80,13 @@ fi
 # Handle options and parameters
 usage="Usage: $0 [-t] [-T] [treeish]"
 merge_opt=""
-while getopts "tThl" opt; do
+while getopts "Thl" opt; do
     case "${opt}" in
         T)  test_mode=true
             ;;
         h)  usage; exit 0
             ;;
-        l)  list_sd_tags; exit 0
+        l)  do_list_tags="true"
             ;;
         *)  usage >&2; exit 1
             ;;
@@ -69,9 +94,20 @@ while getopts "tThl" opt; do
 done
 shift $((OPTIND-1))
 
-test -z "$test_mode" || set -x
-source_treeish=${1:-"shipdriver/master"}
+if [ -n "$do_list_tags" ]; then
+    if [ -z "$test_mode" ]; then init_shipdriver_remote; fi
+    list_sd_tags
+    exit 0
+fi
 
+if [ -z "$1" ]; then
+    usage >&2
+    exit 1
+fi
+
+test -z "$test_mode" || set -x
+
+source_treeish=$1
 
 # Refuse to run unless the index is clean:
 clean=$(git status --porcelain)
@@ -81,19 +117,7 @@ if [ -n "$clean" ]; then
 fi
 
 if [ -z "$test_mode" ]; then
-    # Set up the shipdriver remote
-    if git ls-remote --exit-code shipdriver &>/dev/null; then
-        git remote remove shipdriver
-        echo "Removing existing shipdriver remote."
-    fi
-    echo "Adding new shipdriver remote"
-    git remote add shipdriver https://github.com/Rasbats/shipdriver_pi.git
-    git remote update shipdriver
-
-    # Fetch all available shipdriver sd* tags
-    for t in $(list_sd_tags); do
-        git fetch -q shipdriver refs/tags/$t:refs/tags/$t --no-tags
-    done
+    init_shipdriver_remote
 
     echo "Checking for updates of updates-templates script"
     if ! git diff --quiet HEAD $source_treeish -- update-templates; then
@@ -106,24 +130,15 @@ EOT
     fi
 fi
 
+git rev-parse --verify -q $source_treeish || {
+    echo "Unknown tag or branch $source_treeish -- giving up."
+    exit 1
+}
+
 # Updating  standard directories
-for dir in cmake ci scripts buildwin libs; do
+for dir in cmake ci scripts buildwin; do
     update_dir $dir $source_treeish
 done
-
-test -d opencpn-libs || {
-    echo "Adding the opencpn-libs submodule"
-    git submodule add https://github.com/leamas/opencpn-libs.git
-    git commit -am "Add the opencpn-libs submodule"
-    git submodule update --init opencpn-libs
-}
-
-git -C opencpn-libs pull origin master
-git add opencpn-libs
-git diff-index --quiet --cached HEAD -- || {
-    echo "Updating opencpn-libs submodule"
-    git commit -m "opencpn-libs: Update to latest version"
-}
 
 # If Plugin.cmake exists we should also update CMakeLists.txt
 if [ -f Plugin.cmake ]; then CMakeLists=CMakeLists.txt; fi
@@ -131,10 +146,10 @@ if [ -f Plugin.cmake ]; then CMakeLists=CMakeLists.txt; fi
 echo "Templates: Updating other files"
 for f in \
     appveyor.yml \
+    Changelog.md \
     .circleci \
     .clang-format \
     .cmake-format.yaml \
-    .drone.yml \
     .gitattributes \
     .gitignore \
     INSTALL.md \
@@ -148,8 +163,45 @@ do
     git checkout $source_treeish $f
     git add $f || git add --renormalize $f
 done
-
 git commit -m "Templates: Updating other files"
+
+# Handle opencpn-libs submodule
+test -d opencpn-libs || \
+    git submodule add https://github.com/leamas/opencpn-libs.git opencpn-libs
+git submodule update --remote --merge opencpn-libs
+git add opencpn-libs
+git diff-index --quiet --cached HEAD -- || {
+    echo "Updating opencpn-libs submodule"
+    git commit -m "opencpn-libs: Update to latest version."
+}
+
+# Update flatpak runtime version as required:
+sed -i \
+    -e '/sdk: org.freedesktop.Sdk/s/20.08/22.08/' \
+    -e '/^runtime-version:/s/:.*/: beta/' \
+  flatpak/org.opencpn.OpenCPN.Plugin.*.yaml
+git add flatpak
+git diff-index --quiet --cached HEAD -- || {
+    echo "Updating Updating flatpak runtime version to 22.08"
+    git commit -m "opencpn-libs: Update to latest version."
+}
+
+# Check for files/dirs which are private, but should be copied on first run.
+for f in  \
+    config.h.in \
+    build-deps \
+    build-conf.rc \
+    libs \
+    build-deps/macos-cache-stamp \
+    build-deps/0001-matrix.h-Patch-attributes-handling-wxwidgets-22790.patch
+do
+    if test -e $f; then continue; fi
+    git checkout $source_treeish $f
+done
+git diff-index --quiet --cached HEAD -- || {
+    echo "Adding initial versions of private data"
+    git commit -m "Adding initial versions of private data"
+}
 
 if [ -e update-ignored ]; then
     echo "Revert changes in blacklisted files."
@@ -158,14 +210,13 @@ if [ -e update-ignored ]; then
     done
 fi
 
-for f in buildosx buildwin/NSIS* libs/AndroidLibs.cmake mingw; do
+for f in buildosx buildwin/NSIS* libs/AndroidLibs.cmake mingw .drone.yml; do
     if test -e $f; then git rm -rf $f; fi
 done
 git diff-index --quiet --cached HEAD -- || {
     echo "Removing unused files"
     git commit -am "Templates: Removing obsoleted and unused files."
 }
-
 
 if [ -f cmake/TemplateVersion ]; then
     our_manifest=$(echo flatpak/org.opencpn.OpenCPN.Plugin.*.yaml)
@@ -192,9 +243,8 @@ git commit -m "cmake: Update TemplateVersion to $commit"
 cat << EOF
 
 
-Shipdriver templates has been updated. To review changes made:
+Shipdriver templates has been updated. Please review Changelog.md for info
+about changes in last release.
 
-    $ git log --oneline -5
-
-See UPDATE_TEMPLATES.md for more.
+See UPDATE_TEMPLATES.md for more info.
 EOF
