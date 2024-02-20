@@ -48,8 +48,8 @@ set(PKG_HOMEPAGE https://github.com/Rasbats/otidalplan_pi)
 set(PKG_INFO_URL https://opencpn.org/OpenCPN/plugins/otidalplan.html)
 
 SET(SRC
-		src/AboutDialog.cpp
-		src/AboutDialog.h
+        src/AboutDialog.cpp
+        src/AboutDialog.h
         src/otidalplan_pi.h
         src/otidalplan_pi.cpp
         src/otidalplanOverlayFactory.cpp
@@ -60,32 +60,32 @@ SET(SRC
         src/otidalplanUIDialog.h
         src/icons.h
         src/icons.cpp
-        src/tcmgr.cpp       
-        src/tcmgr.h	
-		src/NavFunc.cpp
-		src/NavFunc.h
-		src/routeprop.cpp
-		src/routeprop.h
-		src/tableroutes.cpp
-		src/tableroutes.h
-		src/IDX_entry.cpp
-	    src/IDX_entry.h
-	    src/logger.cpp
-	    src/logger.h
-	    src/Station_Data.cpp
-	    src/Station_Data.h
-	    src/TC_Error_Code.h
-	    src/TCDataFactory.cpp
-	    src/TCDataFactory.h
-	    src/TCDataSource.cpp
-	    src/TCDataSource.h
-	    src/TCDS_Ascii_Harmonic.cpp
-	    src/TCDS_Ascii_Harmonic.h
-	    src/TCDS_Binary_Harmonic.cpp
-	    src/TCDS_Binary_Harmonic.h   
+        src/tcmgr.cpp
+        src/tcmgr.h
+        src/NavFunc.cpp
+        src/NavFunc.h
+        src/routeprop.cpp
+        src/routeprop.h
+        src/tableroutes.cpp
+        src/tableroutes.h
+        src/IDX_entry.cpp
+        src/IDX_entry.h
+        src/logger.cpp
+        src/logger.h
+        src/Station_Data.cpp
+        src/Station_Data.h
+        src/TC_Error_Code.h
+        src/TCDataFactory.cpp
+        src/TCDataFactory.h
+        src/TCDataSource.cpp
+        src/TCDataSource.h
+        src/TCDS_Ascii_Harmonic.cpp
+        src/TCDS_Ascii_Harmonic.h
+        src/TCDS_Binary_Harmonic.cpp
+        src/TCDS_Binary_Harmonic.h
         src/tzdata.h
     )
-    
+
 set(PKG_API_LIB api-16)  #  A directory in libs/ e. g., api-17 or api-16
 
 macro(late_init)
@@ -95,19 +95,19 @@ endmacro ()
 
 macro(add_plugin_libraries)
   # Add libraries required by this plugin
-  add_subdirectory("libs/tinyxml")
+  add_subdirectory("${CMAKE_SOURCE_DIR}/opencpn-libs/tinyxml")
   target_link_libraries(${PACKAGE_NAME} ocpn::tinyxml)
 
-  add_subdirectory("libs/wxJSON")
+  add_subdirectory("${CMAKE_SOURCE_DIR}/opencpn-libs/wxJSON")
   target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
 
-  add_subdirectory("libs/plugingl")
-  target_link_libraries(${PACKAGE_NAME} ocpn::plugingl)
+  add_subdirectory("${CMAKE_SOURCE_DIR}/opencpn-libs/plugin_dc")
+  target_link_libraries(${PACKAGE_NAME} ocpn::plugin-dc)
 
-  add_subdirectory("libs/jsoncpp")
+  add_subdirectory("${CMAKE_SOURCE_DIR}/opencpn-libs/jsoncpp")
   target_link_libraries(${PACKAGE_NAME} ocpn::jsoncpp)
 
   # The wxsvg library enables SVG overall in the plugin
-  add_subdirectory("libs/wxsvg")
+  add_subdirectory("${CMAKE_SOURCE_DIR}/opencpn-libs/wxsvg")
   target_link_libraries(${PACKAGE_NAME} ocpn::wxsvg)
 endmacro ()
