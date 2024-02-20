@@ -62,7 +62,7 @@ extern "C" DECL_EXP void destroy_pi(opencpn_plugin *p) { delete p; }
 //
 //---------------------------------------------------------------------------------------------------------
 
-otidalplan_pi::otidalplan_pi(void *ppimgr) : opencpn_plugin_116(ppimgr) {
+otidalplan_pi::otidalplan_pi(void *ppimgr) : opencpn_plugin_118(ppimgr) {
   // Create the PlugIn icons
   initialize_images();
 
