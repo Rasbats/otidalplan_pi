@@ -2396,7 +2396,8 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file, in
 			else { // *************** After waypoint zero ******************************
 
 				DistanceBearingMercator_Plugin(latN[wpn + 1], lonN[wpn + 1], latN[wpn], lonN[wpn], &myBrng, &waypointDistance); // how far to the next waypoint?
-				timeToWaypoint = waypointDistance / VBG;
+				
+        timeToWaypoint = waypointDistance / VBG;
 
 				if (timeToWaypoint < timeToRun) {
 
