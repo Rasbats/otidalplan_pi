@@ -50,7 +50,7 @@
 #define otidalplan_TOOL_POSITION    -1          // Request default positioning of toolbar tool
 
 
-class otidalplan_pi : public opencpn_plugin_118
+class otidalplan_pi : public opencpn_plugin_120
 {
 public:
       otidalplan_pi(void *ppimgr);

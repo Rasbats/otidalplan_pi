@@ -32,7 +32,7 @@ set(OCPN_RELEASE_REPO
 # -------  Plugin setup --------
 #
 set(PKG_NAME otidalplan_pi)
-set(PKG_VERSION  2.1.1)
+set(PKG_VERSION  2.2.0)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME otidalplan)    # Dialogs, installer artifacts, ...
@@ -86,7 +86,7 @@ SET(SRC
         src/tzdata.h
     )
 
-set(PKG_API_LIB api-18)  #  A directory in libs/ e. g., api-17 or api-16
+set(PKG_API_LIB api-20)  #  A directory in libs/ e. g., api-17 or api-16
 
 macro(late_init)
   # Perform initialization after the PACKAGE_NAME library, compilers

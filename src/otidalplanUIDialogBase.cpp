@@ -144,7 +144,7 @@ otidalplanUIDialogBase::otidalplanUIDialogBase(wxWindow* parent, wxWindowID id, 
 
 	sbSizer61->Add(m_cbPlannedSpeed, 0, wxALL, 5);
 
-	m_staticText6 = new wxStaticText(sbSizer61->GetStaticBox(), wxID_ANY, _("If checked the speeds used \nfor the ETA calculations will\ncome from speeds \nentered in the route table.\n\nIf unchecked the speeds\nwill be taken from the entry\non this page.\n"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText6 = new wxStaticText(sbSizer61->GetStaticBox(), wxID_ANY, _("If checked the speeds used \nfor the ETA calculations will\ncome from speeds \nentered in the route table.\n\nIf Route Plan Speed changed\nupdate Speed in this dialog.\n\nIf unchecked the speeds\nwill be taken from the entry\non this page.\n"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText6->Wrap(-1);
 	sbSizer61->Add(m_staticText6, 0, wxALL, 5);
 
