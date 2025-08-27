@@ -1879,16 +1879,19 @@ void otidalplanUIDialog::GetRoute() {
           myRtePt.lat = wxString::Format("%f", dlat);
           myRtePt.lon = wxString::Format("%f", dlon);
 
-          myRtePt.planned_speed =
-              wxString::Format("%f", theWaypoints[n]->m_PlannedSpeed);
-          double spd = theWaypoints[n]->m_PlannedSpeed;
+          if (!m_cbPlannedSpeed->IsChecked()) {
+            myRtePt.planned_speed = m_tSpeed->GetValue();
 
-          if (spd < 0.1) myRtePt.planned_speed = this->m_tSpeed->GetValue();
+          } else {
+            myRtePt.planned_speed =
+                wxString::Format("%f", theWaypoints[n]->m_PlannedSpeed);
+            double spd = theWaypoints[n]->m_PlannedSpeed;
 
-         // wxString sped = myRtePt.planned_speed;
-         // wxMessageBox(sped);
+            if (spd < 0.1) myRtePt.planned_speed = this->m_tSpeed->GetValue();
+          }
 
-         
+          // wxString sped = myRtePt.planned_speed;
+          // wxMessageBox(sped);
 
           myRtePt.Name = theWaypoints[n]->m_MarkName;
           myRtePt.is_visible = theWaypoints[n]->IsVisible;
