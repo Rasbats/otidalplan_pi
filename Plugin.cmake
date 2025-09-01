@@ -32,7 +32,7 @@ set(OCPN_RELEASE_REPO
 # -------  Plugin setup --------
 #
 set(PKG_NAME otidalplan_pi)
-set(PKG_VERSION  2.2.2)
+set(PKG_VERSION  2.2.3)
 set(PKG_PRERELEASE "")  # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME otidalplan)    # Dialogs, installer artifacts, ...

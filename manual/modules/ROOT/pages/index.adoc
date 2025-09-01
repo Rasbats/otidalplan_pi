@@ -148,6 +148,8 @@ current harmonics.
 
 == 1. What the plugin does
 
+*The plugin uses UTC for all times entered and displayed.*
+
 Set and rate of the tidal current from tidal current harmonics is used
 to calculate EP positions along a route and a final ETA. Courses to
 steer and speeds made good are available. Starting at different times
