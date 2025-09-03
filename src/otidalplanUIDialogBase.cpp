@@ -53,7 +53,7 @@ otidalplanUIDialogBase::otidalplanUIDialogBase(wxWindow* parent, wxWindowID id,
       wxVERTICAL);
 
   m_staticText3 = new wxStaticText(sbSizer2->GetStaticBox(), wxID_ANY,
-                                   _("First departure time (UTC)"),
+                                   _("Departure time (UTC)"),
                                    wxDefaultPosition, wxDefaultSize, 0);
   m_staticText3->Wrap(-1);
   m_staticText3->SetFont(wxFont(9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,

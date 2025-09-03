@@ -239,10 +239,11 @@ otidalplanUIDialog::otidalplanUIDialog(wxWindow* parent, otidalplan_pi* ppi)
 
   m_tSpeed->SetValue("6");
   m_dtNow = wxDateTime::Now();
+  wxDateTime dt_gmt = m_dtNow.ToGMT();
 
   dummyTC.clear();
 
-  wxString initStartDate = m_dtNow.Format(_T("%Y-%m-%d  %H:%M"));
+  wxString initStartDate = dt_gmt.Format(_T("%Y-%m-%d  %H:%M"));
   m_textCtrl1->SetValue(initStartDate);
 
   b_showTidalArrow = false;
@@ -2162,7 +2163,8 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
         tcData = tcCalculate(dtCurrent.GetTicks(), cl);
         dir = tcData.m_dir;
         spd = fabs(tcData.m_force);
-      } else {
+      }
+      if (cl == 0) {
         dir = 0.0;
         spd = 0.0;
       }
@@ -2218,9 +2220,14 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
         ptr.distTo = wxString::Format(_T("%.1f"), ptrDist);
         ptr.brgTo = wxString::Format(_T("%03.0f"), myBrng);
       }
-
-      ptr.set = wxString::Format(_T("%03.0f"), dir);
-      ptr.rate = wxString::Format(_T("%5.1f"), spd);
+      if (dir != 0 && spd != 0) {
+        ptr.set = wxString::Format(_T("%03.0f"), dir);
+        ptr.rate = wxString::Format(_T("%5.1f"), spd);
+      } else {
+        ptr.set = "???"; 
+        ptr.rate = "???";
+      }
+      
       if (waypointVisible[wpn] == "1") {
         ptr.icon_name = "Circle";
       } else if (waypointVisible[wpn] == "0") {
@@ -2285,8 +2292,13 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
           ptr.brgTo = wxString::Format(_T("%03.0f"), myBrng);
           ptr.CTS = wxString::Format(_T("%03.0f"), BC);
           ptr.SMG = wxString::Format(_T("%5.1f"), VBG);
-          ptr.set = wxString::Format(_T("%03.0f"), dir);
-          ptr.rate = wxString::Format(_T("%5.1f"), spd);
+          if (dir != 0 && spd != 0) {
+            ptr.set = wxString::Format(_T("%03.0f"), dir);
+            ptr.rate = wxString::Format(_T("%5.1f"), spd);
+          } else {
+            ptr.set = "???";
+            ptr.rate = "???";
+          }
           ptr.icon_name = wxT("Triangle");
           tr.m_positionslist.push_back(ptr);
 
@@ -2355,8 +2367,13 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
               ptr.brgTo = wxString::Format(_T("%03.0f"), myBrng);
               ptr.CTS = wxString::Format(_T("%03.0f"), BC);
               ptr.SMG = wxString::Format(_T("%5.1f"), VBG);
-              ptr.set = wxString::Format(_T("%03.0f"), dir);
-              ptr.rate = wxString::Format(_T("%5.1f"), spd);
+              if (dir != 0 && spd != 0) {
+                ptr.set = wxString::Format(_T("%03.0f"), dir);
+                ptr.rate = wxString::Format(_T("%5.1f"), spd);
+              } else {
+                ptr.set = "???";
+                ptr.rate = "???";
+              }
               ptr.icon_name = wxT("Triangle");
               tr.m_positionslist.push_back(ptr);
 
@@ -2384,9 +2401,10 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
                 tcData = tcCalculate(dtCurrent.GetTicks(), cl);
                 dir = tcData.m_dir;
                 spd = fabs(tcData.m_force);
-              } else {
-                dir = 0.01;
-                spd = 0.01;
+              } 
+              if(cl == 0){
+                dir = 0.0;
+                spd = 0.0;
               }
 
               CTSWithCurrent(myBrng, VBG, dir, spd, BC,
@@ -2465,8 +2483,13 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
           ptr.brgTo = wxString::Format(_T("%03.0f"), myBrng);
           ptr.CTS = wxString::Format(_T("%03.0f"), BC);
           ptr.SMG = wxString::Format(_T("%5.1f"), VBG);
-          ptr.set = wxString::Format(_T("%03.0f"), dir);
-          ptr.rate = wxString::Format(_T("%5.1f"), spd);
+          if (dir != 0 && spd != 0) {
+            ptr.set = wxString::Format(_T("%03.0f"), dir);
+            ptr.rate = wxString::Format(_T("%5.1f"), spd);
+          } else {
+            ptr.set = "???";
+            ptr.rate = "???";
+          }
           ptr.icon_name = wxT("Triangle");
           tr.m_positionslist.push_back(ptr);
 
@@ -2525,8 +2548,13 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
               ptr.brgTo = wxString::Format(_T("%03.0f"), myBrng);
               ptr.CTS = wxString::Format(_T("%03.0f"), BC);
               ptr.SMG = wxString::Format(_T("%5.1f"), VBG);
-              ptr.set = wxString::Format(_T("%03.0f"), dir);
-              ptr.rate = wxString::Format(_T("%5.1f"), spd);
+              if (dir != 0 && spd != 0) {
+                ptr.set = wxString::Format(_T("%03.0f"), dir);
+                ptr.rate = wxString::Format(_T("%5.1f"), spd);
+              } else {
+                ptr.set = "???";
+                ptr.rate = "???";
+              }
               ptr.icon_name = wxT("Triangle");
               tr.m_positionslist.push_back(ptr);
 
@@ -2540,9 +2568,10 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
                 tcData = tcCalculate(dtCurrent.GetTicks(), cl);
                 dir = tcData.m_dir;
                 spd = fabs(tcData.m_force);
-              } else {
-                dir = 0.01;
-                spd = 0.01;
+              } 
+              if (cl == 0){
+                dir = 0.0;
+                spd = 0.0;
               }
 
               CTSWithCurrent(myBrng, VBG, dir, spd, BC,
@@ -2576,9 +2605,10 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
                 tcData = tcCalculate(dtCurrent.GetTicks(), cl);
                 dir = tcData.m_dir;
                 spd = fabs(tcData.m_force);
-              } else {
-                dir = 0.01;
-                spd = 0.01;
+              } 
+              if(cl == 0){
+                dir = 0.0;
+                spd = 0.0;
               }
 
               CTSWithCurrent(myBrng, VBG, dir, spd, BC,
@@ -2634,8 +2664,13 @@ void otidalplanUIDialog::CalcTimedETA(wxCommandEvent& event, bool write_file,
     ptr.lon = wxString::Format("%8.4f", lonN[n]);
     ptr.time = dtCurrent.Format(_T(" %a %d-%b-%Y  %H:%M"));
     ptr.m_GUID = endPoint->m_GUID;
-    ptr.set = wxString::Format(_T("%03.0f"), dir);
-    ptr.rate = wxString::Format(_T("%5.1f"), spd);
+    if (dir != 0 && spd != 0) {
+      ptr.set = wxString::Format(_T("%03.0f"), dir);
+      ptr.rate = wxString::Format(_T("%5.1f"), spd);
+    } else {
+      ptr.set = "???";
+      ptr.rate = "???";
+    }
     ptr.CTS = _T("----");
     ptr.SMG = wxString::Format(_T("%5.1f"), VBG);
     ptr.distTo = wxString::Format(_T("%.1f"), ptrDist);
@@ -3294,7 +3329,7 @@ int otidalplanUIDialog::FindClosestDummyTCurrent(wxString rteName, double m_lat,
     compDistance = compDistance + 1;
     if (compDistance > maxDistance) {
       wxString notFound = _("No Tidal Current Station found within 100NM");
-      return 0;
+      tcRefNum = 0;
     }
   }
 
@@ -3375,7 +3410,13 @@ void otidalplanUIDialog::getTidalCurrentStation(double m_lat, double m_lon) {
           "currents"));
   }
 
-  m_tcStationId = FindClosestDummyTCurrent(thisRoute, m_lat, m_lon, 1000);
+  int dist_idx = 0;
+  dist_idx = m_cMaxDist->GetCurrentSelection();
+  wxString max_dist;
+  max_dist = m_cMaxDist->GetString(dist_idx);
+  double dist;
+  max_dist.ToDouble(&dist);
+  m_tcStationId = FindClosestDummyTCurrent(thisRoute, m_lat, m_lon, dist);
 
   for (vector<tc>::iterator it = dummyTC.begin(); it != dummyTC.end();) {
     if (it->tcRef == m_tcStationId) {

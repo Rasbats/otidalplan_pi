@@ -743,6 +743,17 @@ void RouteProp::CreateControls() {
 
   itemStaticBoxSizer3->Add(bSizer2, 1, wxEXPAND, 0);
 
+  wxStaticText* itemStaticTextWarning = new wxStaticText(
+      itemDialog1, wxID_STATIC,
+      _("Set and Rate of tidal current shown as ??? where data unavailable"),
+      wxDefaultPosition, wxDefaultSize, 0);
+
+  itemStaticTextWarning->SetFont(wxFont(12, wxFONTFAMILY_SWISS,
+                                        wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD,
+                                        false, wxT("Arial")));
+
+  itemStaticBoxSizer3->Add(itemStaticTextWarning, 0, wxEXPAND | wxALL, 5);
+
   wxStaticBox* itemStaticBoxSizer14Static =
       new wxStaticBox(this, wxID_ANY, _("Waypoints"));
   m_pListSizer = new wxStaticBoxSizer(itemStaticBoxSizer14Static, wxVERTICAL);
