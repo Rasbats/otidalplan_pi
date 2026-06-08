@@ -33,7 +33,6 @@
 
 #include <wx/fileconf.h>
 #include <wx/stdpaths.h>
-#include <cstdint>
 #include "ocpn_plugin.h"
 
 #include "otidalplan_pi.h"
@@ -167,6 +166,12 @@ int otidalplan_pi::GetAPIVersionMinor() {
 int otidalplan_pi::GetPlugInVersionMajor() { return PLUGIN_VERSION_MAJOR; }
 
 int otidalplan_pi::GetPlugInVersionMinor() { return PLUGIN_VERSION_MINOR; }
+
+int GetPlugInVersionPatch() { return PLUGIN_VERSION_PATCH; }
+int GetPlugInVersionPost() { return PLUGIN_VERSION_TWEAK; }
+const char *GetPlugInVersionPre() { return PKG_PRERELEASE; }
+const char *GetPlugInVersionBuild() { return PKG_BUILD_INFO; }
+
 
 wxBitmap *otidalplan_pi::GetPlugInBitmap() { return &m_panelBitmap; }
 

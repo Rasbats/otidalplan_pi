@@ -34,7 +34,6 @@
 #include <wx/glcanvas.h>
 #endif //precompiled headers
 
-#include <cstdint>
 #include "ocpn_plugin.h"
 #include "otidalplanOverlayFactory.h"
 #include "otidalplanUIDialog.h"
