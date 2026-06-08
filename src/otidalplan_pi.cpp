@@ -33,7 +33,7 @@
 
 #include <wx/fileconf.h>
 #include <wx/stdpaths.h>
-
+#include <cstdint>
 #include "ocpn_plugin.h"
 
 #include "otidalplan_pi.h"
